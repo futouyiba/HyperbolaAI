@@ -1,13 +1,14 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.tags.action import AddCard
 from hearthbreaker.tags.base import Effect, BuffUntil, Buff, AuraUntil, ActionTag
 from hearthbreaker.tags.condition import IsSpell
 from hearthbreaker.tags.event import TurnStarted, TurnEnded, SpellCast
 from hearthbreaker.tags.selector import PlayerSelector, CardSelector
 from hearthbreaker.tags.status import Stealth, ChangeAttack, ManaChange
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 
 
 class Assassinate(SpellCard):
@@ -26,7 +27,7 @@ class Backstab(SpellCard):
         super().__init__("Backstab", 0, CHARACTER_CLASS.ROGUE, CARD_RARITY.FREE,
                          target_func=hearthbreaker.targeting.find_minion_spell_target,
                          filter_func=lambda target: target.health == target.calculate_max_health() and
-                         target.spell_targetable())
+                                                    target.spell_targetable())
 
     def use(self, player, game):
         super().use(player, game)

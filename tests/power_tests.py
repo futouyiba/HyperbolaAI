@@ -2,15 +2,15 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import PredictableAgent, DoNothingAgent
+from hearthbreaker.cards import HuntersMark, MogushanWarden, AvengingWrath, CircleOfHealing, AlAkirTheWindlord, \
+    Shadowform, DefiasRingleader, Doomguard, ArcaneIntellect, Swipe, ArathiWeaponsmith, MassDispel
 from hearthbreaker.cards.minions.hunter import SteamwheedleSniper
 from hearthbreaker.cards.minions.neutral import StonetuskBoar
 from hearthbreaker.cards.minions.priest import ProphetVelen
 from hearthbreaker.cards.minions.warlock import DreadInfernal
 from hearthbreaker.cards.spells.mage import Pyroblast
-from tests.agents.testing_agents import CardTestingAgent
-from hearthbreaker.cards import HuntersMark, MogushanWarden, AvengingWrath, CircleOfHealing, AlAkirTheWindlord, \
-    Shadowform, DefiasRingleader, Doomguard, ArcaneIntellect, Swipe, ArathiWeaponsmith, MassDispel
 from hearthbreaker.powers import MindSpike, MindShatter
+from tests.agents.testing_agents import CardTestingAgent
 from tests.testing_utils import generate_game_for
 
 

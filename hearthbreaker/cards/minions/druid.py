@@ -1,4 +1,6 @@
 from hearthbreaker.cards.base import MinionCard, ChoiceCard
+from hearthbreaker.cards.spells.neutral import spare_part_list
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Minion
 from hearthbreaker.tags.action import Give, Damage, Silence, Transform, Draw, Heal, \
     Summon, AddCard, GiveManaCrystal, Remove, Kill
@@ -8,9 +10,7 @@ from hearthbreaker.tags.condition import IsType, GreaterThan
 from hearthbreaker.tags.event import Damaged, TurnEnded
 from hearthbreaker.tags.selector import CharacterSelector, MinionSelector, SelfSelector, UserPicker, BothPlayer, \
     PlayerSelector, HeroSelector, Count, DeadMinionSelector
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.tags.status import ChangeAttack, ChangeHealth, Taunt, ManaChange
-from hearthbreaker.cards.spells.neutral import spare_part_list
 
 
 class Moonfire(ChoiceCard):
@@ -85,7 +85,6 @@ class AncientTeachings(ChoiceCard):
 
 class AncientOfLore(MinionCard):
     def __init__(self):
-
         super().__init__("Ancient of Lore", 7, CHARACTER_CLASS.DRUID, CARD_RARITY.EPIC, choices=[
             Choice(AncientSecrets(), Heal(5), HeroSelector()),
             Choice(AncientTeachings(), Draw(1), PlayerSelector())
@@ -107,7 +106,6 @@ class Attack(ChoiceCard):
 
 class AncientOfWar(MinionCard):
     def __init__(self):
-
         super().__init__("Ancient of War", 7, CHARACTER_CLASS.DRUID, CARD_RARITY.EPIC, choices=[
             Choice(Health(), Give([Buff(ChangeHealth(5)), Buff(Taunt())]), SelfSelector()),
             Choice(Attack(), Give([Buff(ChangeAttack(5))]), SelfSelector()),

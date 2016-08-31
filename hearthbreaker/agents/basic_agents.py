@@ -1,12 +1,11 @@
 import abc
 import copy
-
 import random
+
 from hearthbreaker.cards.base import Card
 
 
 class Agent(metaclass=abc.ABCMeta):
-
     @abc.abstractmethod
     def do_card_check(self, cards):
         pass

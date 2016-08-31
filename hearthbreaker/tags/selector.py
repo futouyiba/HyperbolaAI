@@ -1,6 +1,7 @@
 import abc
-from hearthbreaker.tags.base import Selector, Player, Picker, Function, Amount, Condition
+
 import hearthbreaker.tags.condition
+from hearthbreaker.tags.base import Selector, Player, Picker, Function, Amount, Condition
 
 
 class FriendlyPlayer(Player):
@@ -262,8 +263,8 @@ class MinionSelector(Selector):
 
     def match(self, source, obj):
         if self.condition:
-            return not obj.is_card() and obj.is_minion() and not obj.dead and self.players.match(source, obj)\
-                and self.condition.evaluate(source, obj)
+            return not obj.is_card() and obj.is_minion() and not obj.dead and self.players.match(source, obj) \
+                   and self.condition.evaluate(source, obj)
         else:
             return obj.is_minion() and self.players.match(source, obj) and not obj.dead
 
@@ -309,7 +310,7 @@ class DeadMinionSelector(Selector):
     def match(self, source, obj):
         if self.condition:
             return not obj.is_card() and obj.is_minion() and self.players.match(source, obj) \
-                and self.condition.evaluate(source, obj)
+                   and self.condition.evaluate(source, obj)
         else:
             return obj.is_minion() and self.players.match(source, obj)
 
@@ -361,7 +362,7 @@ class CharacterSelector(Selector):
     def match(self, source, obj):
         if self.condition:
             return not obj.is_card() and not obj.dead and self.players.match(source, obj) \
-                and self.condition.evaluate(source, obj)
+                   and self.condition.evaluate(source, obj)
         else:
             return not obj.is_card() and not obj.dead and self.players.match(source, obj)
 
@@ -426,7 +427,6 @@ class ConstantSelector(Selector):
 
 
 class TargetSelector(Selector):
-
     def __init__(self, condition=None):
         super().__init__()
         self.condition = condition

@@ -1,11 +1,10 @@
-from collections import defaultdict, deque
 import itertools
 import pprint
 import textwrap
+from collections import defaultdict, deque
 
 from jsonschema import _utils
 from jsonschema.compat import PY3, iteritems
-
 
 WEAK_MATCHES = frozenset(["anyOf", "oneOf"])
 STRONG_MATCHES = frozenset()
@@ -15,17 +14,17 @@ _unset = _utils.Unset()
 
 class _Error(Exception):
     def __init__(
-        self,
-        message,
-        validator=_unset,
-        path=(),
-        cause=None,
-        context=(),
-        validator_value=_unset,
-        instance=_unset,
-        schema=_unset,
-        schema_path=(),
-        parent=None,
+            self,
+            message,
+            validator=_unset,
+            path=(),
+            cause=None,
+            context=(),
+            validator_value=_unset,
+            instance=_unset,
+            schema=_unset,
+            schema_path=(),
+            parent=None,
     ):
         super(_Error, self).__init__(
             message,
@@ -76,13 +75,13 @@ class _Error(Exception):
             On instance%s:
             %s
             """.rstrip()
-        ) % (
-            self.validator,
-            _utils.format_as_index(list(self.relative_schema_path)[:-1]),
-            _utils.indent(pschema),
-            _utils.format_as_index(self.relative_path),
-            _utils.indent(pinstance),
-        )
+                                              ) % (
+                                  self.validator,
+                                  _utils.format_as_index(list(self.relative_schema_path)[:-1]),
+                                  _utils.indent(pschema),
+                                  _utils.format_as_index(self.relative_path),
+                                  _utils.indent(pinstance),
+                              )
 
     if PY3:
         __str__ = __unicode__
@@ -155,11 +154,10 @@ class UnknownType(Exception):
             While checking instance:
             %s
             """.rstrip()
-        ) % (self.type, _utils.indent(pschema), _utils.indent(pinstance))
+                               ) % (self.type, _utils.indent(pschema), _utils.indent(pinstance))
 
     if PY3:
         __str__ = __unicode__
-
 
 
 class FormatError(Exception):
@@ -258,6 +256,7 @@ def by_relevance(weak=WEAK_MATCHES, strong=STRONG_MATCHES):
     def relevance(error):
         validator = error.validator
         return -len(error.path), validator not in weak, validator in strong
+
     return relevance
 
 

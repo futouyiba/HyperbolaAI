@@ -2,10 +2,10 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import DoNothingAgent, PredictableAgent
-from tests.agents.testing_agents import OneCardPlayingAgent, PlayAndAttackAgent, CardTestingAgent,\
+from hearthbreaker.cards import *
+from tests.agents.testing_agents import OneCardPlayingAgent, PlayAndAttackAgent, CardTestingAgent, \
     SelfSpellTestingAgent, EnemyMinionSpellTestingAgent
 from tests.testing_utils import generate_game_for
-from hearthbreaker.cards import *
 
 
 class TestWarrior(unittest.TestCase):

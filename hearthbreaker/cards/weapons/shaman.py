@@ -4,8 +4,8 @@ from hearthbreaker.game_objects import Weapon
 from hearthbreaker.tags.action import Give
 from hearthbreaker.tags.base import Buff, Deathrattle
 from hearthbreaker.tags.condition import IsType
-from hearthbreaker.tags.status import Windfury, ChangeAttack, ChangeHealth
 from hearthbreaker.tags.selector import MinionSelector, RandomPicker
+from hearthbreaker.tags.status import Windfury, ChangeAttack, ChangeHealth
 
 
 class Doomhammer(WeaponCard):

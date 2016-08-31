@@ -30,8 +30,9 @@ def load_deck(filename):
     return Deck(cards, hero_for_class(character_class))
 
 
-_totalTry = 100
-_totalCount = 0
+_totalPlay = 1000
+_totalCount = 0.0
+
 
 def do_stuff():
     global _totalTry
@@ -63,8 +64,8 @@ def do_stuff():
     # game = Game([deck1, deck2], [(UCTAgent.SimpleUCTAgent(0.1,100),"opponent"), (UCTAgent.SimpleUCTAgent(0.2,100),
     #                                                                              "uct")])
 
-    print(timeit.timeit(play_game, 'gc.enable()', number=_totalTry))
-    print("uct win rate:%0.2f" % (_totalCount / _totalTry))
+    print(timeit.timeit(play_game, 'gc.enable()', number=_totalPlay))
+    print("uct win rate:%0.2f" % (_totalCount / _totalPlay))
 
 
 if __name__ == "__main__":

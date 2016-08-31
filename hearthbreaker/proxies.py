@@ -1,5 +1,3 @@
-
-
 class ProxyCharacter:
     def __init__(self, character_ref):
         if type(character_ref) is str:

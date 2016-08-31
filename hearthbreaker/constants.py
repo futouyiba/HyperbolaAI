@@ -88,7 +88,6 @@ class MINION_TYPE:
 
     @staticmethod
     def from_str(type_name):
-
         return MINION_TYPE.__types[type_name.upper()]
 
     @staticmethod

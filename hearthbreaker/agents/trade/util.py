@@ -1,6 +1,7 @@
-import random
 import collections
 import functools
+import random
+
 from hearthbreaker.game_objects import Hero
 
 
@@ -9,6 +10,7 @@ class memoized(object):
     If called later with the same arguments, the cached value is returned
     (not reevaluated).
     '''
+
     def __init__(self, func):
         self.func = func
         self.cache = {}

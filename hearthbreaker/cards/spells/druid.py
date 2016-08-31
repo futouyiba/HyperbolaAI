@@ -1,10 +1,11 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import ChoiceCard, SpellCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.tags.action import Summon
 from hearthbreaker.tags.base import Deathrattle
 from hearthbreaker.tags.selector import PlayerSelector
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 
 
 class Innervate(SpellCard):
@@ -293,18 +294,18 @@ class DamageAll(ChoiceCard):
 
 
 class DamageOne(ChoiceCard):
-            def __init__(self):
-                super().__init__("Do five damage to an enemy minion", 0, CHARACTER_CLASS.DRUID, CARD_RARITY.COMMON,
-                                 False)
+    def __init__(self):
+        super().__init__("Do five damage to an enemy minion", 0, CHARACTER_CLASS.DRUID, CARD_RARITY.COMMON,
+                         False)
 
-            def can_use(self, player, game):
-                return super().can_use(player, game) and len(hearthbreaker.targeting.find_minion_spell_target(
-                    game, lambda t: t.spell_targetable())) > 0
+    def can_use(self, player, game):
+        return super().can_use(player, game) and len(hearthbreaker.targeting.find_minion_spell_target(
+            game, lambda t: t.spell_targetable())) > 0
 
-            def use(self, player, game):
-                targets = hearthbreaker.targeting.find_minion_spell_target(game, lambda t: t.spell_targetable())
-                target = player.agent.choose_target(targets)
-                target.damage(player.effective_spell_damage(5), self)
+    def use(self, player, game):
+        targets = hearthbreaker.targeting.find_minion_spell_target(game, lambda t: t.spell_targetable())
+        target = player.agent.choose_target(targets)
+        target.damage(player.effective_spell_damage(5), self)
 
 
 class Starfall(SpellCard):

@@ -1,8 +1,8 @@
 import re
 
 from jsonschema import _utils
-from jsonschema.exceptions import FormatError, ValidationError
 from jsonschema.compat import iteritems
+from jsonschema.exceptions import FormatError, ValidationError
 
 
 def patternProperties(validator, patternProperties, instance, schema):
@@ -13,7 +13,7 @@ def patternProperties(validator, patternProperties, instance, schema):
         for k, v in iteritems(instance):
             if re.search(pattern, k):
                 for error in validator.descend(
-                    v, subschema, path=k, schema_path=pattern,
+                        v, subschema, path=k, schema_path=pattern,
                 ):
                     yield error
 
@@ -44,15 +44,15 @@ def items(validator, items, instance, schema):
     else:
         for (index, item), subschema in zip(enumerate(instance), items):
             for error in validator.descend(
-                item, subschema, path=index, schema_path=index,
+                    item, subschema, path=index, schema_path=index,
             ):
                 yield error
 
 
 def additionalItems(validator, aI, instance, schema):
     if (
-        not validator.is_type(instance, "array") or
-        validator.is_type(schema.get("items", {}), "object")
+                not validator.is_type(instance, "array") or
+                validator.is_type(schema.get("items", {}), "object")
     ):
         return
 
@@ -129,17 +129,17 @@ def maxItems(validator, mI, instance, schema):
 
 def uniqueItems(validator, uI, instance, schema):
     if (
-        uI and
-        validator.is_type(instance, "array") and
-        not _utils.uniq(instance)
+                    uI and
+                    validator.is_type(instance, "array") and
+                not _utils.uniq(instance)
     ):
         yield ValidationError("%r has non-unique elements" % instance)
 
 
 def pattern(validator, patrn, instance, schema):
     if (
-        validator.is_type(instance, "string") and
-        not re.search(patrn, instance)
+                validator.is_type(instance, "string") and
+                not re.search(patrn, instance)
     ):
         yield ValidationError("%r does not match %r" % (instance, patrn))
 
@@ -172,7 +172,7 @@ def dependencies(validator, dependencies, instance, schema):
 
         if validator.is_type(dependency, "object"):
             for error in validator.descend(
-                instance, dependency, schema_path=property,
+                    instance, dependency, schema_path=property,
             ):
                 yield error
         else:
@@ -223,10 +223,10 @@ def properties_draft3(validator, properties, instance, schema):
     for property, subschema in iteritems(properties):
         if property in instance:
             for error in validator.descend(
-                instance[property],
-                subschema,
-                path=property,
-                schema_path=property,
+                    instance[property],
+                    subschema,
+                    path=property,
+                    schema_path=property,
             ):
                 yield error
         elif subschema.get("required", False):
@@ -244,7 +244,7 @@ def properties_draft3(validator, properties, instance, schema):
 
 def disallow_draft3(validator, disallow, instance, schema):
     for disallowed in _utils.ensure_list(disallow):
-        if validator.is_valid(instance, {"type" : [disallowed]}):
+        if validator.is_valid(instance, {"type": [disallowed]}):
             yield ValidationError(
                 "%r is disallowed for %r" % (disallowed, instance)
             )
@@ -274,10 +274,10 @@ def properties_draft4(validator, properties, instance, schema):
     for property, subschema in iteritems(properties):
         if property in instance:
             for error in validator.descend(
-                instance[property],
-                subschema,
-                path=property,
-                schema_path=property,
+                    instance[property],
+                    subschema,
+                    path=property,
+                    schema_path=property,
             ):
                 yield error
 

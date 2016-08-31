@@ -1,3 +1,53 @@
+from hearthbreaker.cards.minions.druid import (
+    KeeperOfTheGrove,
+    DruidOfTheClaw,
+    AncientOfLore,
+    AncientOfWar,
+    IronbarkProtector,
+    Cenarius,
+    AnodizedRoboCub,
+    MechBearCat,
+    DruidOfTheFang,
+    Malorne,
+    GroveTender,
+    DruidOfTheFlame,
+    VolcanicLumberer,
+)
+from hearthbreaker.cards.minions.hunter import (
+    TimberWolf,
+    SavannahHighmane,
+    Houndmaster,
+    KingKrush,
+    StarvingBuzzard,
+    TundraRhino,
+    ScavengingHyena,
+    Webspinner,
+    Hound,
+    Huffer,
+    Misha,
+    Leokk,
+    Snake,
+    MetaltoothLeaper,
+    KingOfBeasts,
+    Gahzrilla,
+    SteamwheedleSniper,
+    CoreRager,
+    Acidmaw,
+)
+from hearthbreaker.cards.minions.mage import (
+    ManaWyrm,
+    SorcerersApprentice,
+    KirinTorMage,
+    EtherealArcanist,
+    WaterElemental,
+    ArchmageAntonidas,
+    Snowchugger,
+    GoblinBlastmage,
+    SootSpewer,
+    WeeSpellstopper,
+    FlameLeviathan,
+    Flamewaker
+)
 from hearthbreaker.cards.minions.neutral import (
     BloodfenRaptor,
     IronbeakOwl,
@@ -248,60 +298,6 @@ from hearthbreaker.cards.minions.neutral import (
     ArgentWatchman,
     ArmoredWarhorse,
 )
-
-from hearthbreaker.cards.minions.druid import (
-    KeeperOfTheGrove,
-    DruidOfTheClaw,
-    AncientOfLore,
-    AncientOfWar,
-    IronbarkProtector,
-    Cenarius,
-    AnodizedRoboCub,
-    MechBearCat,
-    DruidOfTheFang,
-    Malorne,
-    GroveTender,
-    DruidOfTheFlame,
-    VolcanicLumberer,
-)
-
-from hearthbreaker.cards.minions.hunter import (
-    TimberWolf,
-    SavannahHighmane,
-    Houndmaster,
-    KingKrush,
-    StarvingBuzzard,
-    TundraRhino,
-    ScavengingHyena,
-    Webspinner,
-    Hound,
-    Huffer,
-    Misha,
-    Leokk,
-    Snake,
-    MetaltoothLeaper,
-    KingOfBeasts,
-    Gahzrilla,
-    SteamwheedleSniper,
-    CoreRager,
-    Acidmaw,
-)
-
-from hearthbreaker.cards.minions.mage import (
-    ManaWyrm,
-    SorcerersApprentice,
-    KirinTorMage,
-    EtherealArcanist,
-    WaterElemental,
-    ArchmageAntonidas,
-    Snowchugger,
-    GoblinBlastmage,
-    SootSpewer,
-    WeeSpellstopper,
-    FlameLeviathan,
-    Flamewaker
-)
-
 from hearthbreaker.cards.minions.paladin import (
     AldorPeacekeeper,
     ArgentProtector,
@@ -315,7 +311,6 @@ from hearthbreaker.cards.minions.paladin import (
     BolvarFordragon,
     DragonConsort,
 )
-
 from hearthbreaker.cards.minions.priest import (
     AuchenaiSoulpriest,
     CabalShadowPriest,
@@ -332,7 +327,6 @@ from hearthbreaker.cards.minions.priest import (
     Voljin,
     TwilightWhelp,
 )
-
 from hearthbreaker.cards.minions.rogue import (
     AnubarAmbusher,
     DefiasRingleader,
@@ -349,7 +343,6 @@ from hearthbreaker.cards.minions.rogue import (
     DarkIronSkulker,
     Anubarak,
 )
-
 from hearthbreaker.cards.minions.shaman import (
     AlAkirTheWindlord,
     DustDevil,
@@ -371,7 +364,6 @@ from hearthbreaker.cards.minions.shaman import (
     Neptulon,
     FireguardDestroyer,
 )
-
 from hearthbreaker.cards.minions.warlock import (
     FlameImp,
     PitLord,
@@ -393,7 +385,6 @@ from hearthbreaker.cards.minions.warlock import (
     MistressOfPain,
     ImpGangBoss,
 )
-
 from hearthbreaker.cards.minions.warrior import (
     ArathiWeaponsmith,
     Armorsmith,

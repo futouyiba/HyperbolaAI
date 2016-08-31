@@ -1,4 +1,5 @@
 import json
+
 from hearthbreaker.cards import FlameImp, LightsJustice, EyeForAnEye
 from hearthbreaker.engine import Game
 from tests.agents.testing_agents import CardTestingAgent

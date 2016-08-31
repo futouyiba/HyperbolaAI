@@ -1,5 +1,9 @@
+import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard, MinionCard
 from hearthbreaker.cards.heroes import Ragnaros
+from hearthbreaker.constants import CARD_RARITY, CHARACTER_CLASS, MINION_TYPE
 from hearthbreaker.game_objects import Minion
 from hearthbreaker.tags.action import Heal, Summon, Draw, \
     Kill, Damage, ResurrectFriendly, Steal, Duplicate, Give, SwapWithHand, AddCard, Transform, ApplySecret, \
@@ -20,11 +24,8 @@ from hearthbreaker.tags.selector import MinionSelector, BothPlayer, SelfSelector
     PlayerSelector, TargetSelector, EnemyPlayer, CharacterSelector, WeaponSelector, \
     HeroSelector, OtherPlayer, UserPicker, RandomPicker, CurrentPlayer, Count, Attribute, CardSelector, \
     Difference, LastDrawnSelector, RandomAmount, DeadMinionSelector, FriendlyPlayer
-from hearthbreaker.constants import CARD_RARITY, CHARACTER_CLASS, MINION_TYPE
 from hearthbreaker.tags.status import ChangeAttack, ChangeHealth, Charge, Taunt, Windfury, CantAttack, \
     SpellDamage, DoubleDeathrattle, Frozen, ManaChange, DivineShield, MegaWindfury, CanAttack
-import hearthbreaker.targeting
-import copy
 
 
 class BloodfenRaptor(MinionCard):
@@ -289,7 +290,7 @@ class ManaAddict(MinionCard):
 
     def create_minion(self, player):
         return Minion(1, 3, effects=[Effect(SpellCast(), ActionTag(Give(BuffUntil(ChangeAttack(2), TurnEnded())),
-                                            SelfSelector()))])
+                                                                   SelfSelector()))])
 
 
 class OasisSnapjaw(MinionCard):
@@ -835,9 +836,9 @@ class KnifeJuggler(MinionCard):
 
     def create_minion(self, player):
         return Minion(3, 2, effects=[Effect(AfterAdded(), ActionTag(Damage(1),
-                                            CharacterSelector(players=EnemyPlayer(),
-                                                              picker=RandomPicker(),
-                                                              condition=None)))])
+                                                                    CharacterSelector(players=EnemyPlayer(),
+                                                                                      picker=RandomPicker(),
+                                                                                      condition=None)))])
 
 
 class BaineBloodhoof(MinionCard):
@@ -924,7 +925,8 @@ class Demolisher(MinionCard):
 
     def create_minion(self, player):
         return Minion(1, 4, effects=[Effect(TurnStarted(), ActionTag(Damage(2),
-                                            CharacterSelector(players=EnemyPlayer(), picker=RandomPicker())))])
+                                                                     CharacterSelector(players=EnemyPlayer(),
+                                                                                       picker=RandomPicker())))])
 
 
 class Doomsayer(MinionCard):
@@ -933,7 +935,8 @@ class Doomsayer(MinionCard):
 
     def create_minion(self, player):
         return Minion(0, 7, effects=[Effect(TurnStarted(), ActionTag(Kill(),
-                                            MinionSelector(condition=None, players=BothPlayer())))])
+                                                                     MinionSelector(condition=None,
+                                                                                    players=BothPlayer())))])
 
 
 class Gruul(MinionCard):
@@ -1009,8 +1012,8 @@ class Nozdormu(MinionCard):
     def __init__(self):
         super().__init__("Nozdormu", 9, CHARACTER_CLASS.ALL, CARD_RARITY.LEGENDARY, minion_type=MINION_TYPE.DRAGON)
 
-    def create_minion(self, player):             # Strictly worse than Alexstrasza
-        return Minion(8, 8)                      # Is the effect even applicable to AI?
+    def create_minion(self, player):  # Strictly worse than Alexstrasza
+        return Minion(8, 8)  # Is the effect even applicable to AI?
 
 
 class RagnarosTheFirelord(MinionCard):
@@ -1019,7 +1022,8 @@ class RagnarosTheFirelord(MinionCard):
 
     def create_minion(self, player):
         return Minion(8, 8, effects=[Effect(TurnEnded(), ActionTag(Damage(8),
-                                            CharacterSelector(players=EnemyPlayer(), picker=RandomPicker())))],
+                                                                   CharacterSelector(players=EnemyPlayer(),
+                                                                                     picker=RandomPicker())))],
                       buffs=[Buff(CantAttack())])
 
 
@@ -1535,8 +1539,8 @@ class PintSizedSummoner(MinionCard):
         return Minion(2, 2, effects=[Effect(TurnStarted(), ActionTag(GiveAura(AuraUntil(ManaChange(-1),
                                                                                         CardSelector(
                                                                                             condition=IsMinion()),
-                                                                              MinionPlaced())),
-                                            PlayerSelector()))])
+                                                                                        MinionPlaced())),
+                                                                     PlayerSelector()))])
 
 
 class OldMurkEye(MinionCard):
@@ -1612,7 +1616,7 @@ class Ysera(MinionCard):
                                                                          Nightmare(),
                                                                          YseraAwakens(),
                                                                          Dream()])),
-                                             PlayerSelector()))])
+                                                       PlayerSelector()))])
 
 
 class Chicken(MinionCard):
@@ -1643,10 +1647,10 @@ class Emboldener3000(MinionCard):
 
     def create_minion(self, player):
         return Minion(0, 4, effects=[Effect(TurnEnded(), ActionTag(Give([Buff(ChangeAttack(1)),
-                                                                   Buff(ChangeHealth(1))]),
-                                            MinionSelector(condition=None,
-                                                           players=BothPlayer(),
-                                                           picker=RandomPicker())))])
+                                                                         Buff(ChangeHealth(1))]),
+                                                                   MinionSelector(condition=None,
+                                                                                  players=BothPlayer(),
+                                                                                  picker=RandomPicker())))])
 
 
 class HomingChicken(MinionCard):
@@ -1665,7 +1669,8 @@ class Poultryizer(MinionCard):
 
     def create_minion(self, player):
         return Minion(0, 3, effects=[Effect(TurnStarted(), ActionTag(Transform(Chicken()),
-                                            MinionSelector(None, BothPlayer(), RandomPicker())))])
+                                                                     MinionSelector(None, BothPlayer(),
+                                                                                    RandomPicker())))])
 
 
 class RepairBot(MinionCard):
@@ -1674,7 +1679,8 @@ class RepairBot(MinionCard):
 
     def create_minion(self, player):
         return Minion(0, 3, effects=[Effect(TurnEnded(), ActionTag(Heal(6),
-                                            CharacterSelector(IsDamaged(), BothPlayer(), RandomPicker())))])
+                                                                   CharacterSelector(IsDamaged(), BothPlayer(),
+                                                                                     RandomPicker())))])
 
 
 class LorewalkerCho(MinionCard):
@@ -1684,7 +1690,7 @@ class LorewalkerCho(MinionCard):
     def create_minion(self, player):
         return Minion(0, 4, effects=[Effect(SpellCast(player=BothPlayer()),
                                             ActionTag(AddCard(LastCard()),
-                                            PlayerSelector(OtherPlayer())))])
+                                                      PlayerSelector(OtherPlayer())))])
 
 
 class WildPyromancer(MinionCard):
@@ -2122,7 +2128,10 @@ class ShipsCannon(MinionCard):
 
     def create_minion(self, player):
         return Minion(2, 3, effects=[Effect(MinionSummoned(IsType(MINION_TYPE.PIRATE)), ActionTag(Damage(2),
-                                            CharacterSelector(None, EnemyPlayer(), RandomPicker())))])
+                                                                                                  CharacterSelector(
+                                                                                                      None,
+                                                                                                      EnemyPlayer(),
+                                                                                                      RandomPicker())))])
 
 
 class OgreBrute(MinionCard):
@@ -2133,7 +2142,8 @@ class OgreBrute(MinionCard):
         return Minion(4, 4, effects=[Effect(Attack(), ActionTag(ChangeTarget(CharacterSelector(NotCurrentTarget(),
                                                                                                EnemyPlayer(),
                                                                                                RandomPicker())),
-                                            SelfSelector(), And(OneIn(2), OpponentMinionCountIsGreaterThan(0))))])
+                                                                SelfSelector(),
+                                                                And(OneIn(2), OpponentMinionCountIsGreaterThan(0))))])
 
 
 class MogorTheOgre(MinionCard):
@@ -2192,7 +2202,7 @@ class Gazlowe(MinionCard):
     def create_minion(self, player):
         return Minion(3, 6, effects=[Effect(SpellCast(ManaCost(1)),
                                             ActionTag(AddCard(CollectionSource([IsType(MINION_TYPE.MECH)])),
-                                            PlayerSelector()))])
+                                                      PlayerSelector()))])
 
 
 class MiniMage(MinionCard):
@@ -2278,7 +2288,7 @@ class TroggzorTheEarthinator(MinionCard):
 
     def create_minion(self, player):
         return Minion(6, 6, effects=[Effect(SpellCast(player=EnemyPlayer()), ActionTag(Summon(BurlyRockjawTrogg()),
-                                            PlayerSelector()))])
+                                                                                       PlayerSelector()))])
 
 
 class Hobgoblin(MinionCard):
@@ -2287,8 +2297,8 @@ class Hobgoblin(MinionCard):
 
     def create_minion(self, player):
         return Minion(2, 3, effects=[Effect(MinionPlaced(BaseAttackEqualTo(1)),
-                                     ActionTag(Give([Buff(ChangeHealth(2)), Buff(ChangeAttack(2))]),
-                                               TargetSelector()))])
+                                            ActionTag(Give([Buff(ChangeHealth(2)), Buff(ChangeAttack(2))]),
+                                                      TargetSelector()))])
 
 
 class Cogmaster(MinionCard):
@@ -2327,7 +2337,8 @@ class Junkbot(MinionCard):
 
     def create_minion(self, player):
         return Minion(1, 5, effects=[Effect(MinionDied(IsType(MINION_TYPE.MECH)),
-                                     ActionTag(Give([Buff(ChangeAttack(2)), Buff(ChangeHealth(2))]), SelfSelector()))])
+                                            ActionTag(Give([Buff(ChangeAttack(2)), Buff(ChangeHealth(2))]),
+                                                      SelfSelector()))])
 
 
 class Jeeves(MinionCard):
@@ -2338,7 +2349,7 @@ class Jeeves(MinionCard):
         return Minion(1, 4, effects=[Effect(TurnEnded(player=BothPlayer()),
                                             ActionTag(Draw(Difference(Count(CardSelector(players=CurrentPlayer())),
                                                                       value=3)),
-                                            PlayerSelector(CurrentPlayer())))])
+                                                      PlayerSelector(CurrentPlayer())))])
 
 
 class LilExorcist(MinionCard):
@@ -2369,11 +2380,11 @@ class EnhanceoMechano(MinionCard):
     def __init__(self):
         super().__init__("Enhance-o Mechano", 4, CHARACTER_CLASS.ALL, CARD_RARITY.EPIC, minion_type=MINION_TYPE.MECH,
                          battlecry=Battlecry(Give([
-                                                  Buff(Windfury()),
-                                                  Buff(Taunt()),
-                                                  Buff(DivineShield())],
-                                                  RandomPicker()),
-                                             MinionSelector()))
+                             Buff(Windfury()),
+                             Buff(Taunt()),
+                             Buff(DivineShield())],
+                             RandomPicker()),
+                             MinionSelector()))
 
     def create_minion(self, player):
         return Minion(3, 2)
@@ -2385,7 +2396,8 @@ class FoeReaper4000(MinionCard):
 
     def create_minion(self, player):
         return Minion(6, 9, effects=[Effect(Attack(IsMinion()), ActionTag(Damage(Attribute("attack", SelfSelector())),
-                                            MinionSelector(TargetAdjacent(), EnemyPlayer())))])
+                                                                          MinionSelector(TargetAdjacent(),
+                                                                                         EnemyPlayer())))])
 
 
 class KezanMystic(MinionCard):
@@ -2413,9 +2425,10 @@ class MimironsHead(MinionCard):
     def create_minion(self, player):
         return Minion(4, 5, effects=[Effect(TurnStarted(), [ActionTag(Kill(), MinionSelector(IsType(MINION_TYPE.MECH,
                                                                                                     True)),
-                                            GreaterThan(Count(MinionSelector(IsType(MINION_TYPE.MECH, True))),
-                                                        value=2)),
-                                            ActionTag(Summon(V07TR0N()), PlayerSelector())])])
+                                                                      GreaterThan(Count(MinionSelector(
+                                                                          IsType(MINION_TYPE.MECH, True))),
+                                                                                  value=2)),
+                                                            ActionTag(Summon(V07TR0N()), PlayerSelector())])])
 
 
 class GnomishChicken(MinionCard):

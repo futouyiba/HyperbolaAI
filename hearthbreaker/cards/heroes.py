@@ -1,6 +1,6 @@
 from hearthbreaker.cards.base import HeroCard
 from hearthbreaker.constants import CHARACTER_CLASS, MINION_TYPE
-from hearthbreaker.powers import MagePower, DruidPower, HunterPower, PaladinPower, PriestPower, RoguePower,\
+from hearthbreaker.powers import MagePower, DruidPower, HunterPower, PaladinPower, PriestPower, RoguePower, \
     ShamanPower, WarlockPower, WarriorPower, JaraxxusPower, DieInsect
 
 
@@ -81,6 +81,7 @@ def hero_for_class(character_class):
         return Garrosh()
     else:
         return Jaina()
+
 
 __hero_lookup = {"Jaina": Jaina,
                  "Malfurion": Malfurion,

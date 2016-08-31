@@ -90,7 +90,6 @@ class SetAttack(ChangeAttack, metaclass=Amount):
 
 
 class DoubleAttack(ChangeAttack):
-
     def act(self, actor, target):
         pass
 

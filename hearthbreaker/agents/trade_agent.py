@@ -7,7 +7,6 @@ from hearthbreaker.tags.status import ChangeAttack, ChangeHealth
 
 
 class BattlecryType:
-
     @staticmethod
     def target_type_for_card(card):
         res = None

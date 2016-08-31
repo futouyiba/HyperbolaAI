@@ -29,7 +29,7 @@ class SimpleUCTAgent(RandomAgent):
         nextgame.other_player.opponent = nextgame.current_player
         nextgame._has_turn_ended = self.__thinkagent.getGame()._has_turn_ended
 
-        self.__thinkagent.__game = nextgame
+        player.game = nextgame
         '''while True:
             attack_minions = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
             if player.hero.can_attack():

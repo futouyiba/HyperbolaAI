@@ -1,8 +1,9 @@
 import unittest
+
 from hearthbreaker.agents.trade.possible_play import PossiblePlays
 from hearthbreaker.cards import Wisp, WarGolem, BloodfenRaptor, RiverCrocolisk, AbusiveSergeant, ArgentSquire
-from tests.agents.trade.test_helpers import TestHelpers
 from tests.agents.trade.test_case_mixin import TestCaseMixin
+from tests.agents.trade.test_helpers import TestHelpers
 
 
 class TestTradeAgent(TestCaseMixin, unittest.TestCase):

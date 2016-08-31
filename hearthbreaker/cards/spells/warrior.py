@@ -1,5 +1,9 @@
 import copy
+
+import hearthbreaker.tags.action
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.tags.action import Damage, Draw, RemoveFromHand
 from hearthbreaker.tags.base import AuraUntil, Buff, Effect, ActionTag
 from hearthbreaker.tags.card_source import Same
@@ -7,9 +11,6 @@ from hearthbreaker.tags.condition import GreaterThan, IsDamaged
 from hearthbreaker.tags.event import TurnEnded, Drawn
 from hearthbreaker.tags.selector import MinionSelector, HeroSelector, PlayerSelector, Count
 from hearthbreaker.tags.status import Charge as _Charge, MinimumHealth, ManaChange
-import hearthbreaker.targeting
-import hearthbreaker.tags.action
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 
 
 class BattleRage(SpellCard):
@@ -97,7 +98,7 @@ class Execute(SpellCard):
         super().__init__("Execute", 1, CHARACTER_CLASS.WARRIOR, CARD_RARITY.FREE,
                          target_func=hearthbreaker.targeting.find_enemy_minion_spell_target,
                          filter_func=lambda target: target.health != target.calculate_max_health() and
-                         target.spell_targetable())
+                                                    target.spell_targetable())
 
     def use(self, player, game):
         super().use(player, game)
@@ -143,7 +144,7 @@ class Rampage(SpellCard):
         super().__init__("Rampage", 2, CHARACTER_CLASS.WARRIOR, CARD_RARITY.COMMON,
                          target_func=hearthbreaker.targeting.find_minion_spell_target,
                          filter_func=lambda target: target.health != target.calculate_max_health() and
-                         target.spell_targetable())
+                                                    target.spell_targetable())
 
     def use(self, player, game):
         super().use(player, game)
@@ -251,7 +252,7 @@ class BurrowingMine(SpellCard):
         super().__init__("Burrowing Mine", 0, CHARACTER_CLASS.WARRIOR, CARD_RARITY.COMMON, False,
                          effects=[Effect(Drawn(), ActionTag(Damage(10), HeroSelector())),
                                   Effect(Drawn(), ActionTag(RemoveFromHand(Same()),
-                                         PlayerSelector())),
+                                                            PlayerSelector())),
                                   Effect(Drawn(), ActionTag(Draw(), PlayerSelector()))])
 
     def use(self, player, game):

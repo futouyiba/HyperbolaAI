@@ -1,5 +1,6 @@
 import random
 import unittest
+
 from hearthbreaker.agents.basic_agents import RandomAgent
 from hearthbreaker.cards import GoldshireFootman, MurlocRaider, BloodfenRaptor, FrostwolfGrunt, RiverCrocolisk, \
     IronfurGrizzly, MagmaRager, SilverbackPatriarch, ChillwindYeti, SenjinShieldmasta, BootyBayBodyguard, \
@@ -11,7 +12,6 @@ from hearthbreaker.engine import Game, Deck
 
 
 class TestAgents(unittest.TestCase):
-
     def setUp(self):
         random.seed(1857)
 

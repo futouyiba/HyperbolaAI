@@ -1,24 +1,23 @@
 import json
+import random
+import re
 import unittest
 from io import StringIO
 from os import listdir
 from os.path import isdir
-import re
-import random
-from hearthbreaker.cards.heroes import Malfurion, Jaina
-from hearthbreaker.engine import Game, Deck
 
-from hearthbreaker.replay import Replay, record, playback
-from hearthbreaker.agents.basic_agents import PredictableAgent, RandomAgent
-from hearthbreaker.constants import CHARACTER_CLASS
-from hearthbreaker.cards import *
 import hearthbreaker.game_objects
+from hearthbreaker.agents.basic_agents import PredictableAgent, RandomAgent
+from hearthbreaker.cards import *
+from hearthbreaker.cards.heroes import Malfurion, Jaina
+from hearthbreaker.constants import CHARACTER_CLASS
+from hearthbreaker.engine import Game, Deck
+from hearthbreaker.replay import Replay, record, playback
 from tests.agents.testing_agents import PlayAndAttackAgent, OneCardPlayingAgent
 from tests.testing_utils import StackedDeck
 
 
 class TestReplay(unittest.TestCase):
-
     def __compare_json(self, json1, json2):
         return json.loads(json1) == json.loads(json2)
 
@@ -202,6 +201,7 @@ class TestReplay(unittest.TestCase):
                     files.append(folder_name + "/" + file)
                 elif isdir(folder_name + "/" + file):
                     get_files_from(folder_name + "/" + file)
+
         with open("replay.schema.json", "r") as schema_file:
             schema = json.load(schema_file)
             get_files_from("tests/replays")

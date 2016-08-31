@@ -54,7 +54,6 @@ class CardMatches(Condition):
 
 
 class HasOverload(Condition):
-
     def evaluate(self, target, card, args):
         return card.overload > 0
 
@@ -348,7 +347,7 @@ class Adjacent(Condition):
 
     def evaluate(self, target, minion, *args):
         return minion.player is target.player and \
-            (minion.index == target.index - 1) or (minion.index == target.index + 1)
+               (minion.index == target.index - 1) or (minion.index == target.index + 1)
 
 
 class TargetAdjacent(Condition):
@@ -362,7 +361,7 @@ class TargetAdjacent(Condition):
 
     def evaluate(self, target, minion, *args):
         return target.current_target and target.current_target.player is minion.player and \
-            ((target.current_target.index == minion.index - 1) or (target.current_target.index == minion.index + 1))
+               ((target.current_target.index == minion.index - 1) or (target.current_target.index == minion.index + 1))
 
 
 class AttackLessThanOrEqualTo(Condition):
@@ -408,7 +407,7 @@ class BaseAttackEqualTo(Condition):
     def evaluate(self, target, minion, *args):
         from hearthbreaker.tags.status import ChangeAttack
         return (self.include_self or target is not minion) and \
-            minion.card.calculate_stat(ChangeAttack, minion.base_attack) == self.attack_equal
+               minion.card.calculate_stat(ChangeAttack, minion.base_attack) == self.attack_equal
 
     def __to_json__(self):
         return {

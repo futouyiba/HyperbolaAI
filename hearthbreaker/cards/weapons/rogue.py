@@ -1,11 +1,11 @@
 from hearthbreaker.cards.base import WeaponCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Weapon
 from hearthbreaker.tags.action import Damage
 from hearthbreaker.tags.base import Battlecry, Buff
 from hearthbreaker.tags.condition import GreaterThan, IsType
 from hearthbreaker.tags.selector import CharacterSelector, UserPicker, Count, MinionSelector
 from hearthbreaker.tags.status import ChangeAttack
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 
 
 class WickedKnife(WeaponCard):

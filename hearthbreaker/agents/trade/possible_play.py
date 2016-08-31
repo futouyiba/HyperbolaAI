@@ -1,5 +1,6 @@
-from hearthbreaker.agents.trade.util import Util
 from functools import reduce
+
+from hearthbreaker.agents.trade.util import Util
 
 
 class PossiblePlay:

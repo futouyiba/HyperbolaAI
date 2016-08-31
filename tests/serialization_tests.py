@@ -1,6 +1,7 @@
 import json
-from hearthbreaker.engine import Game
+
 import tests.copy_tests
+from hearthbreaker.engine import Game
 
 
 class TestGameSerialization(tests.copy_tests.TestGameCopying):

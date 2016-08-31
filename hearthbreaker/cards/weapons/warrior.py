@@ -63,4 +63,5 @@ class OgreWarmaul(WeaponCard):
         return Weapon(4, 2, effects=[Effect(CharacterAttack(IsHero()),
                                             ActionTag(ChangeTarget(CharacterSelector(NotCurrentTarget(), EnemyPlayer(),
                                                                                      RandomPicker())),
-                                            HeroSelector(), And(OneIn(2), OpponentMinionCountIsGreaterThan(0))))])
+                                                      HeroSelector(),
+                                                      And(OneIn(2), OpponentMinionCountIsGreaterThan(0))))])

@@ -5,7 +5,6 @@ import string
 
 
 class JSONObject(metaclass=abc.ABCMeta):
-
     @abc.abstractmethod
     def __to_json__(self):
         pass
@@ -66,7 +65,7 @@ class Aura(Tag):
 
     def match(self, obj):
         return (not self.condition or self.condition.evaluate(self.owner, self.owner)) and \
-            self.selector.match(self.owner, obj)
+               self.selector.match(self.owner, obj)
 
     def __to_json__(self):
         if self.condition:
@@ -224,7 +223,6 @@ class Player(metaclass=abc.ABCMeta):
 
 
 class Picker(JSONObject, metaclass=abc.ABCMeta):
-
     @abc.abstractmethod
     def pick(self, source, targets):
         pass
@@ -265,7 +263,6 @@ class Selector(JSONObject, metaclass=abc.ABCMeta):
 
 
 class Action(JSONObject, metaclass=abc.ABCMeta):
-
     @abc.abstractmethod
     def act(self, actor, target, other=None):
         pass
@@ -639,7 +636,6 @@ class Choice(ActionTag):
 
 
 class Function(JSONObject, metaclass=abc.ABCMeta):
-
     def do(self, target, *args):
         pass
 

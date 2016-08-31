@@ -1,13 +1,13 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard, MinionCard
-from hearthbreaker.cards.minions.priest import ShadowOfNothing
 from hearthbreaker.cards.minions.neutral import Lightwarden
+from hearthbreaker.cards.minions.priest import ShadowOfNothing
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.tags.base import BuffUntil, Buff
 from hearthbreaker.tags.event import TurnEnded
 from hearthbreaker.tags.status import Stolen, SpellDamage
-
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 
 
 class CircleOfHealing(SpellCard):
@@ -193,7 +193,6 @@ class ShadowMadness(SpellCard):
                          filter_func=lambda target: target.calculate_attack() <= 3 and target.spell_targetable())
 
     def use(self, player, game):
-
         super().use(player, game)
 
         minion = self.target.copy(player)

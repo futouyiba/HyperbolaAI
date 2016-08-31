@@ -1,15 +1,16 @@
-import re
 import json
+import re
 
 import hearthbreaker
-from hearthbreaker.cards.heroes import hero_from_name
-import hearthbreaker.constants
-from hearthbreaker.engine import Game, card_lookup, Deck
-import hearthbreaker.game_objects
 import hearthbreaker.cards
+import hearthbreaker.constants
+import hearthbreaker.game_objects
 import hearthbreaker.proxies
+from hearthbreaker.cards.heroes import hero_from_name
+from hearthbreaker.engine import Game, card_lookup, Deck
 from hearthbreaker.serialization.move import Move, AttackMove, PowerMove, TurnEndMove, \
     TurnStartMove, ConcedeMove, PlayMove
+
 __doc__ = """
 Responsible for reading and writing replays in either the compact or complete replay format (see the `replay format
 <https://github.com/danielyule/hearthbreaker/blob/master/replay_format.md>`_ for details).
@@ -45,6 +46,7 @@ class Replay:
     Encapsulates the data stored in a replay, along with functions to read and write replays.  The data
     stored in this class can be used for either recording or playing back replays.
     """
+
     def __init__(self, filename=None):
         """
         Create a new Replay.  This replay can be used for recording or playing back a game.
@@ -371,6 +373,7 @@ def record(game):
                   this replay can be written to a file to remember the state of this game.
     :rtype: :class:`Replay`
     """
+
     class RecordingAgent:
         __slots__ = ['agent']
 
@@ -499,6 +502,7 @@ def playback(replay):
 
         def choose_option(self, options, player):
             return options[self.next_option]
+
     game = Game.__new__(Game)
     _old_random_choice = game.random_choice
     _old_start_turn = game._start_turn

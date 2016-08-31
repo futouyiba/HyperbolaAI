@@ -1,5 +1,6 @@
 from hearthbreaker.cards.base import MinionCard, WeaponCard
 from hearthbreaker.cards.spells.warrior import BurrowingMine
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Weapon, Minion
 from hearthbreaker.tags.action import IncreaseArmor, Damage, Give, Equip, AddCard
 from hearthbreaker.tags.base import Effect, Battlecry, Buff, Aura, ActionTag
@@ -7,7 +8,6 @@ from hearthbreaker.tags.condition import AttackLessThanOrEqualTo, IsMinion, IsTy
 from hearthbreaker.tags.event import MinionPlaced, CharacterDamaged, ArmorIncreased, Damaged
 from hearthbreaker.tags.selector import BothPlayer, SelfSelector, TargetSelector, HeroSelector, MinionSelector, \
     PlayerSelector, EnemyPlayer, UserPicker, Count, CardSelector
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.tags.status import ChangeAttack, Charge, ChangeHealth
 
 

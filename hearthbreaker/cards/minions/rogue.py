@@ -1,6 +1,7 @@
 from hearthbreaker.cards.base import MinionCard
 from hearthbreaker.cards.minions.neutral import Nerubian
 from hearthbreaker.cards.spells.neutral import GallywixsCoin
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Minion
 from hearthbreaker.tags.action import Kill, Bounce, Summon, Give, Damage, ChangeTarget, AddCard, IncreaseWeaponAttack
 from hearthbreaker.tags.base import Effect, Deathrattle, Battlecry, Buff, ActionTag
@@ -10,7 +11,6 @@ from hearthbreaker.tags.condition import IsMinion, IsType, NotCurrentTarget, One
 from hearthbreaker.tags.event import DidDamage, MinionSummoned, TurnEnded, Attack, SpellCast
 from hearthbreaker.tags.selector import TargetSelector, MinionSelector, PlayerSelector, UserPicker, \
     BothPlayer, CharacterSelector, RandomPicker, SelfSelector, EnemyPlayer, FriendlyPlayer, Attribute, WeaponSelector
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.tags.status import Stealth, ChangeAttack, ChangeHealth
 
 
@@ -73,7 +73,7 @@ class SI7Agent(MinionCard):
         super().__init__("SI:7 Agent", 3, CHARACTER_CLASS.ROGUE, CARD_RARITY.RARE,
                          combo=Battlecry(Damage(2), CharacterSelector(
                              players=BothPlayer(), picker=UserPicker())
-                         ))
+                                         ))
 
     def create_minion(self, player):
         return Minion(3, 3)
@@ -102,7 +102,8 @@ class IronSensei(MinionCard):
 
     def create_minion(self, player):
         return Minion(2, 2, effects=[Effect(TurnEnded(), ActionTag(Give([Buff(ChangeAttack(2)), Buff(ChangeHealth(2))]),
-                                            MinionSelector(IsType(MINION_TYPE.MECH), picker=RandomPicker())))])
+                                                                   MinionSelector(IsType(MINION_TYPE.MECH),
+                                                                                  picker=RandomPicker())))])
 
 
 class OgreNinja(MinionCard):
@@ -115,9 +116,9 @@ class OgreNinja(MinionCard):
                                                               CharacterSelector(NotCurrentTarget(),
                                                                                 EnemyPlayer(),
                                                                                 RandomPicker())),
-                                                                    SelfSelector(),
-                                                                    And(OneIn(2),
-                                                                        OpponentMinionCountIsGreaterThan(0))))])
+                                                              SelfSelector(),
+                                                              And(OneIn(2),
+                                                                  OpponentMinionCountIsGreaterThan(0))))])
 
 
 class TradePrinceGallywix(MinionCard):
@@ -127,10 +128,10 @@ class TradePrinceGallywix(MinionCard):
     def create_minion(self, player):
         return Minion(5, 8, effects=[Effect(SpellCast(Not(HasCardName("Gallywix's Coin")), EnemyPlayer()),
                                             ActionTag(AddCard(LastCard()),
-                                            PlayerSelector(FriendlyPlayer()))),
+                                                      PlayerSelector(FriendlyPlayer()))),
                                      Effect(SpellCast(Not(HasCardName("Gallywix's Coin")), EnemyPlayer()),
                                             ActionTag(AddCard(GallywixsCoin()),
-                                            PlayerSelector(EnemyPlayer())))])
+                                                      PlayerSelector(EnemyPlayer())))])
 
 
 class GoblinAutoBarber(MinionCard):

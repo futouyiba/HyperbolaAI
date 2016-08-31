@@ -1,13 +1,14 @@
-import copy
 import collections
+import copy
 import sys
+
 from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
 from hearthbreaker.engine import Game, Deck
 
 if sys.version_info.major is 3:
     if sys.version_info.minor <= 2:
-        import mock  # pragma: no cover
+        pass
     else:
         from unittest import mock  # pragma: no cover
 

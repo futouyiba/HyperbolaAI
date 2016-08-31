@@ -1,18 +1,18 @@
 import json
 import re
-from hearthbreaker.cards.base import MinionCard, WeaponCard
-from hearthbreaker.game_objects import Weapon, Minion
+
 import tests.card_tests.druid_tests
-import tests.card_tests.mage_tests
 import tests.card_tests.hunter_tests
+import tests.card_tests.mage_tests
+import tests.card_tests.neutral_tests
 import tests.card_tests.paladin_tests
 import tests.card_tests.priest_tests
 import tests.card_tests.rogue_tests
 import tests.card_tests.shaman_tests
 import tests.card_tests.warlock_tests
 import tests.card_tests.warrior_tests
-import tests.card_tests.neutral_tests
-
+from hearthbreaker.cards.base import MinionCard, WeaponCard
+from hearthbreaker.game_objects import Weapon, Minion
 
 with open("card_defs.json", "r") as file:
     cards = json.load(file)
@@ -129,6 +129,7 @@ class JSONTester:
                 create_dict['deathrattle'] = Deathrattle.from_json(**card_def['deathrattle'])
 
             return Weapon(**create_dict)
+
         if card_def['rarity'] != "Special":
             if 'ref_name' in card_def:
                 name = card_def['ref_name']

@@ -505,7 +505,6 @@ class SwapWithHand(Action):
 
 
 class ApplySecret(Action):
-
     def __init__(self, secrets):
         self.secrets = secrets
 
@@ -700,9 +699,9 @@ class IncreaseDurability(Action):
 
 class DecreaseDurability(Action):
     def act(self, actor, target, other=None):
-            target.durability -= 1
-            if target.durability <= 0:
-                target.destroy()
+        target.durability -= 1
+        if target.durability <= 0:
+            target.destroy()
 
     def __to_json__(self):
         return {

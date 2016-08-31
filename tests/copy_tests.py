@@ -3,6 +3,7 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import DoNothingAgent, PredictableAgent
+from hearthbreaker.cards import *
 from hearthbreaker.cards.base import MinionCard
 from hearthbreaker.constants import MINION_TYPE, CARD_RARITY
 from hearthbreaker.tags.status import ChangeAttack
@@ -10,7 +11,6 @@ from tests.agents.testing_agents import CardTestingAgent, OneCardPlayingAgent, P
     EnemyMinionSpellTestingAgent, HeroPowerAndCardPlayingAgent
 from tests.card_tests.card_tests import TestUtilities
 from tests.testing_utils import generate_game_for
-from hearthbreaker.cards import *
 
 
 def create_enemy_copying_agent(turn_to_play=1):
@@ -1103,6 +1103,7 @@ class TestMinionCopying(unittest.TestCase, TestUtilities):
                 super().do_turn(player)
                 if self.turn == 6:
                     new_game = player.game.copy()
+
         game = generate_game_for(Headcrack, StonetuskBoar, HCAgent, DoNothingAgent)
 
         for turn in range(0, 4):

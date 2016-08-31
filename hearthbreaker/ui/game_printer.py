@@ -1,5 +1,6 @@
-from hearthbreaker.constants import CHARACTER_CLASS
 import curses
+
+from hearthbreaker.constants import CHARACTER_CLASS
 
 card_abbreviations = {
     'Mark of the Wild': 'Mrk Wild',

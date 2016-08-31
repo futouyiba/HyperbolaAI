@@ -1,13 +1,13 @@
 from hearthbreaker.cards.base import WeaponCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.game_objects import Weapon
 from hearthbreaker.tags.action import Give, DecreaseDurability, Heal, Joust, IncreaseDurability
+from hearthbreaker.tags.base import Buff, Effect, Battlecry, ActionTag
 from hearthbreaker.tags.condition import IsHero
 from hearthbreaker.tags.event import MinionSummoned, CharacterAttack
 from hearthbreaker.tags.selector import TargetSelector, HeroSelector, MinionSelector, RandomPicker, WeaponSelector, \
     SelfSelector
-from hearthbreaker.tags.base import Buff, Effect, Battlecry, ActionTag
 from hearthbreaker.tags.status import DivineShield, Taunt, ChangeAttack, ChangeHealth
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 
 
 class LightsJustice(WeaponCard):
@@ -25,7 +25,7 @@ class SwordOfJustice(WeaponCard):
     def create_weapon(self, player):
         return Weapon(1, 5, effects=[Effect(MinionSummoned(), ActionTag(Give([Buff(ChangeAttack(1)),
                                                                               Buff(ChangeHealth(1))]),
-                                            TargetSelector())),
+                                                                        TargetSelector())),
                                      Effect(MinionSummoned(), ActionTag(DecreaseDurability(), WeaponSelector()))])
 
 

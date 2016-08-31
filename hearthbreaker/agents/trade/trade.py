@@ -1,4 +1,5 @@
 from functools import reduce
+
 from hearthbreaker.agents.trade.util import memoized
 
 
@@ -44,7 +45,7 @@ class Trade:
         res = self.end_value() - self.start_value()
 
         if self.after_attack()['my_minion'].health > 0 and \
-           self.after_attack()['opp_minion'].health <= 0:
+                        self.after_attack()['opp_minion'].health <= 0:
             res += 1.0
 
         return round(res, 2)
@@ -171,7 +172,7 @@ class Trades:
     @memoized
     def has_lethal(self):
         return not self.opp_has_taunt() and \
-            self.total_attack() >= self.opp_hero.health
+               self.total_attack() >= self.opp_hero.health
 
     @memoized
     def trade_value(self, trade):

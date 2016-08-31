@@ -1,14 +1,14 @@
 import abc
 import copy
 from functools import reduce
-import hearthbreaker.constants
 
+import hearthbreaker.constants
+import hearthbreaker.targeting
 from hearthbreaker.tags.base import Aura, AuraUntil, Effect, Buff, BuffUntil, Deathrattle
 from hearthbreaker.tags.event import TurnEnded
 from hearthbreaker.tags.selector import CurrentPlayer
 from hearthbreaker.tags.status import Stealth, ChangeAttack, ChangeHealth, SetAttack, Charge, Taunt, DivineShield, \
     Windfury, NoSpellTarget, SpellDamage, MinimumHealth, CanAttack
-import hearthbreaker.targeting
 
 
 class GameException(Exception):
@@ -126,7 +126,7 @@ class Bindable:
                     self.events[event].remove(handler)
                     # tidy up the events dict so we don't have entries for events with no handlers
                     if len(self.events[event]) is 0:
-                        del(self.events[event])
+                        del (self.events[event])
                 handler[0](*args)
 
     def unbind(self, event, function):
@@ -149,6 +149,7 @@ class GameObject:
     Provides typing for the various game objects in the engine.  Allows for checking the type of an object without
     needing to know about and import the various objects in the game engine
     """
+
     def __init__(self, effects=None, auras=None, buffs=None):
         # A list of the effects that this player has
         if effects:
@@ -716,7 +717,7 @@ class Character(Bindable, GameObject, metaclass=abc.ABCMeta):
         """
         can_attack = self.calculate_stat(CanAttack, True)
         return can_attack and self.calculate_attack() > 0 and self.attacks_performed < self.attacks_allowed() and \
-            not self.frozen and not (self.dead or self.removed)
+               not self.frozen and not (self.dead or self.removed)
 
     def spell_targetable(self):
         """
@@ -984,6 +985,7 @@ class Minion(Character):
                 self.player.trigger("after_death", self.player)
 
                 self.player.graveyard.append(self.card.name)
+
             self.bind_once("died", delayed_death)
             super().die(by)
             self.player.dead_this_turn.append(self)
@@ -1106,11 +1108,26 @@ class Hero(Character):
 
         return super().calculate_stat(stat_class, starting_value)
 
-    def copy(self, new_owner):
+    def copy(self, new_owner, keep=False):
         new_hero = Hero(self.base_health, self.character_class, self.power, new_owner)
+        if keep:
+            new_hero.base_attack = self.base_attack
+            new_hero.dead = self.dead
+            new_hero.frozen = self.frozen
+            new_hero.immune = self.immune
+            new_hero.delayed = copy.deepcopy(self.delayed)
+            new_hero.divine_shield = self.divine_shield
+            new_hero.enraged = self.enraged
+            new_hero.removed = self.removed
+            new_hero.born = self.born
+            new_hero.health_delta = self.health_delta
+            new_hero.enrage = copy.deepcopy(self.enrage)
+            new_hero.current_target = self.current_target
         new_hero.health = self.health
         new_hero.armor = self.armor
         new_hero.used_windfury = False
+        if keep:
+            new_hero.used_windfury = self.used_windfury
         new_hero.attacks_performed = self.attacks_performed
 
         new_hero.effects = copy.deepcopy(self.effects)

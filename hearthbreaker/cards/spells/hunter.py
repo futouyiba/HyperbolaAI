@@ -1,12 +1,13 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SecretCard, SpellCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Minion, Hero
 from hearthbreaker.tags.base import BuffUntil, Buff
 from hearthbreaker.tags.event import TurnEnded
 from hearthbreaker.tags.selector import CurrentPlayer
 from hearthbreaker.tags.status import Immune, ManaChange
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 
 
 class HuntersMark(SpellCard):
@@ -37,7 +38,7 @@ class BestialWrath(SpellCard):
                          CARD_RARITY.EPIC,
                          target_func=hearthbreaker.targeting.find_friendly_minion_spell_target,
                          filter_func=lambda minion: minion.card.minion_type is MINION_TYPE.BEAST and
-                         minion.spell_targetable())
+                                                    minion.spell_targetable())
 
     def use(self, player, game):
         super().use(player, game)

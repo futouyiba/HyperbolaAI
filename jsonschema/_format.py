@@ -50,6 +50,7 @@ class FormatChecker(object):
         def _checks(func):
             self.checkers[format] = (func, raises)
             return func
+
         return _checks
 
     cls_checks = classmethod(checks)
@@ -113,6 +114,7 @@ def _checks_drafts(both=None, draft3=None, draft4=None, raises=()):
             _draft_checkers["draft4"].append(draft4)
             func = FormatChecker.cls_checks(draft4, raises)(func)
         return func
+
     return wrap
 
 
@@ -124,6 +126,7 @@ def is_email(instance):
 
 
 _ipv4_re = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+
 
 @_checks_drafts(draft3="ip-address", draft4="ipv4")
 def is_ipv4(instance):
@@ -141,8 +144,8 @@ if hasattr(socket, "inet_pton"):
             return True
         return socket.inet_pton(socket.AF_INET6, instance)
 
-
 _host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
+
 
 @_checks_drafts(draft3="host-name", draft4="hostname")
 def is_host_name(instance):
@@ -168,7 +171,6 @@ else:
             return True
         return rfc3987.parse(instance, rule="URI")
 
-
 try:
     import strict_rfc3339
 except ImportError:
@@ -183,11 +185,11 @@ except ImportError:
                 return True
             return isodate.parse_datetime(instance)
 else:
-        @_checks_drafts("date-time")
-        def is_date(instance):
-            if not isinstance(instance, str_types):
-                return True
-            return strict_rfc3339.validate_rfc3339(instance)
+    @_checks_drafts("date-time")
+    def is_date(instance):
+        if not isinstance(instance, str_types):
+            return True
+        return strict_rfc3339.validate_rfc3339(instance)
 
 
 @_checks_drafts("regex", raises=re.error)
@@ -223,8 +225,8 @@ else:
     @_checks_drafts(draft3="color", raises=(ValueError, TypeError))
     def is_css21_color(instance):
         if (
-            not isinstance(instance, str_types) or
-            instance.lower() in webcolors.css21_names_to_hex
+                    not isinstance(instance, str_types) or
+                        instance.lower() in webcolors.css21_names_to_hex
         ):
             return True
         return is_css_color_code(instance)
@@ -234,7 +236,6 @@ else:
         if instance.lower() in webcolors.css3_names_to_hex:
             return True
         return is_css_color_code(instance)
-
 
 draft3_format_checker = FormatChecker(_draft_checkers["draft3"])
 draft4_format_checker = FormatChecker(_draft_checkers["draft4"])

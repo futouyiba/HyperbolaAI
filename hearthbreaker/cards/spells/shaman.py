@@ -1,11 +1,12 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.tags.action import Summon
 from hearthbreaker.tags.base import Deathrattle, Buff
 from hearthbreaker.tags.selector import PlayerSelector
 from hearthbreaker.tags.status import Windfury as _Windfury, Frozen, ManaChange
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 
 
 class AncestralHealing(SpellCard):
@@ -192,7 +193,6 @@ class Windfury(SpellCard):
 
 
 class Reincarnate(SpellCard):
-
     def __init__(self):
         super().__init__("Reincarnate", 2, CHARACTER_CLASS.SHAMAN, CARD_RARITY.COMMON,
                          target_func=hearthbreaker.targeting.find_minion_spell_target)

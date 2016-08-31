@@ -2,13 +2,13 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import PredictableAgent, DoNothingAgent
+from hearthbreaker.cards import *
 from hearthbreaker.constants import CHARACTER_CLASS, MINION_TYPE
 from hearthbreaker.engine import Game
 from hearthbreaker.replay import playback, Replay
 from tests.agents.testing_agents import CardTestingAgent, OneCardPlayingAgent, EnemySpellTestingAgent, \
     MinionAttackingAgent, PlayAndAttackAgent
 from tests.testing_utils import generate_game_for, StackedDeck
-from hearthbreaker.cards import *
 
 
 class TestMage(unittest.TestCase):

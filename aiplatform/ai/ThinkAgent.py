@@ -14,6 +14,7 @@ class ThinkAgent:
         self.__game = game
         self.__period = period
         self.__testtime = 10
+
     def getGame(self):
         return self.__game
 
@@ -23,10 +24,10 @@ class ThinkAgent:
         for i in range(self.__period):
             self.__copyGameToMind()
             self.__gameinmind.current_player.agent.do_turn(self.__gameinmind.current_player)
-            allgames.append(self.__gameinmind.copy())
+            allgames.append(self.__gameinmind.copy(keep=True))
             winrate.append(0)
             self.__gameinmind._end_turn()
-            game4test = self.__gameinmind.copy()
+            game4test = self.__gameinmind.copy(keep=True)
             for j in range(self.__testtime):
                 while not game4test.game_ended:
                     game4test.play_single_turn()

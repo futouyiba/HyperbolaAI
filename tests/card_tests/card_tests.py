@@ -1,14 +1,14 @@
 import json
-import unittest
 import re
+import unittest
 
 from hearthbreaker.agents.basic_agents import DoNothingAgent
+from hearthbreaker.cards import *
 from hearthbreaker.constants import CHARACTER_CLASS, MINION_TYPE, CARD_RARITY
 from hearthbreaker.engine import card_lookup
 from tests.agents.testing_agents import PlayAndAttackAgent
 from tests.card_tests.id_mapping import id_mappings
 from tests.testing_utils import generate_game_for
-from hearthbreaker.cards import *
 
 
 class TestUtilities:
@@ -51,7 +51,7 @@ class CardTest(unittest.TestCase):
                     if "cost" in card_info:
                         self.assertEqual(int(card_info["cost"]), card.mana,
                                          "Expected {} to have cost {}.  Got {}".format(
-                                         card_info["name"], card_info["cost"], card.mana))
+                                             card_info["name"], card_info["cost"], card.mana))
                     if "playerClass" in card_info:
                         self.assertEqual(CHARACTER_CLASS.from_str(card_info["playerClass"]), card.character_class,
                                          "Expected {} to have class {}.  Got {}".format(
@@ -108,28 +108,28 @@ class CardTest(unittest.TestCase):
                                 elif overload_re.match(effect) is not None:
                                     self.assertEqual(int(overload_re.match(effect).group(1)), card.overload,
                                                      ("Expected {:s} to have overload of" +
-                                                     " {:s}, but had {:d}").format(card_info["name"],
-                                                                                   overload_re.match(effect).group(1),
-                                                     card.overload))
+                                                      " {:s}, but had {:d}").format(card_info["name"],
+                                                                                    overload_re.match(effect).group(1),
+                                                                                    card.overload))
                                 elif spell_damage_re.match(effect) is not None:
                                     self.assertEqual(int(spell_damage_re.match(effect).group(1)),
                                                      minion.player.spell_damage,
                                                      ("Expected {:s} to have spell damage of" +
-                                                     " {}, but had {}").format(card_info["name"],
-                                                                               spell_damage_re.match(effect).group(1),
-                                                     minion.player.spell_damage))
+                                                      " {}, but had {}").format(card_info["name"],
+                                                                                spell_damage_re.match(effect).group(1),
+                                                                                minion.player.spell_damage))
                         minion.silence()
                         self.assertEqual(int(card_info["attack"]), minion.calculate_attack(),
                                          "Expected {} to have attack of {}.  Got {}".format(
-                                         card_info["name"], card_info["attack"], minion.calculate_attack()))
+                                             card_info["name"], card_info["attack"], minion.calculate_attack()))
                         self.assertEqual(int(card_info["health"]), minion.health,
                                          "Expected {} to have health of {}.  Got {}".format(
-                                         card_info["name"], card_info["health"], minion.health))
+                                             card_info["name"], card_info["health"], minion.health))
                         if "race" in card_info:
                             self.assertEqual(MINION_TYPE.from_str(card_info["race"]), card.minion_type,
                                              "Expected {} to have race {}.  Got {}".format(
-                                             card_info["name"], card_info["race"],
-                                             MINION_TYPE.to_str(card.minion_type)))
+                                                 card_info["name"], card_info["race"],
+                                                 MINION_TYPE.to_str(card.minion_type)))
                         else:
                             self.assertEqual(MINION_TYPE.NONE, card.minion_type,
                                              "Expected {} to have no race.  Got {}".format(
@@ -138,10 +138,10 @@ class CardTest(unittest.TestCase):
                         weapon = card.create_weapon(fake_game.current_player)
                         self.assertEqual(int(card_info["attack"]), weapon.base_attack,
                                          "Expected {} to have attack of {}.  Got {}".format(
-                                         card_info["name"], card_info["attack"], weapon.base_attack))
+                                             card_info["name"], card_info["attack"], weapon.base_attack))
                         self.assertEqual(int(card_info["durability"]), weapon.durability,
                                          "Expected {} to have durability of {}.  Got {}".format(
-                                         card_info["name"], card_info["durability"], weapon.durability))
+                                             card_info["name"], card_info["durability"], weapon.durability))
 
         file.close()
         if len(not_implemented) > 0:

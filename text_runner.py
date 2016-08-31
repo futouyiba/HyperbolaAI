@@ -7,7 +7,6 @@ from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
 from hearthbreaker.engine import Game, Deck, card_lookup
 from hearthbreaker.ui.game_printer import GameRender
-from hearthbreaker.cards import *
 
 
 def load_deck(filename):

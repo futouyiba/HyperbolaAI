@@ -1,5 +1,6 @@
 import abc
 from functools import reduce
+
 import hearthbreaker.constants
 from hearthbreaker.constants import CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Bindable, GameObject, GameException, Hero
@@ -173,6 +174,7 @@ class MinionCard(Card, metaclass=abc.ABCMeta):
     :see: :class:`Card`
     :see: :meth:`create_minion`
     """
+
     def __init__(self, name, mana, character_class, rarity, collectible=True,
                  minion_type=hearthbreaker.constants.MINION_TYPE.NONE, ref_name=None, battlecry=None, choices=None,
                  combo=None, overload=0, effects=None, buffs=None):

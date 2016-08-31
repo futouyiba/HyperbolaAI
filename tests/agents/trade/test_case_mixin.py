@@ -1,6 +1,7 @@
 import random
-from tests.agents.trade.test_helpers import TestHelpers
+
 from hearthbreaker.agents.trade.trade import Trades
+from tests.agents.trade.test_helpers import TestHelpers
 
 
 class TestCaseMixin:

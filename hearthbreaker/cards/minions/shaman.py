@@ -1,4 +1,5 @@
 from hearthbreaker.cards.base import MinionCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Minion
 from hearthbreaker.tags.action import Draw, Damage, Give, Heal, ChangeTarget, AddCard
 from hearthbreaker.tags.base import Aura, Effect, Battlecry, ActionTag, Buff
@@ -8,7 +9,6 @@ from hearthbreaker.tags.condition import Adjacent, HasOverload, IsType, OneIn, N
 from hearthbreaker.tags.event import TurnEnded, CardPlayed, MinionDied, Attack
 from hearthbreaker.tags.selector import MinionSelector, PlayerSelector, HeroSelector, CharacterSelector, BothPlayer, \
     UserPicker, SelfSelector, RandomPicker, EnemyPlayer, RandomAmount
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.tags.status import ChangeAttack, ChangeHealth, Windfury
 
 
@@ -159,8 +159,9 @@ class DunemaulShaman(MinionCard):
                                                            ActionTag(ChangeTarget(CharacterSelector(NotCurrentTarget(),
                                                                                                     EnemyPlayer(),
                                                                                                     RandomPicker())),
-                                                           SelfSelector(),
-                                                           And(OneIn(2), OpponentMinionCountIsGreaterThan(0))))])
+                                                                     SelfSelector(),
+                                                                     And(OneIn(2),
+                                                                         OpponentMinionCountIsGreaterThan(0))))])
 
 
 class Neptulon(MinionCard):

@@ -1,9 +1,9 @@
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard
 from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.tags.base import BuffUntil, Buff
 from hearthbreaker.tags.event import TurnStarted
 from hearthbreaker.tags.status import Stealth, Taunt, Frozen
-import hearthbreaker.targeting
 
 
 class TheCoin(SpellCard):
@@ -90,6 +90,7 @@ class WhirlingBlades(SpellCard):
     def use(self, player, game):
         super().use(player, game)
         self.target.change_attack(1)
+
 
 spare_part_list = [ArmorPlating(), EmergencyCoolant(), FinickyCloakfield(), TimeRewinder(), ReversingSwitch(),
                    RustyHorn(), WhirlingBlades()]

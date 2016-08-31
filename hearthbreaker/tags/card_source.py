@@ -6,7 +6,6 @@ from hearthbreaker.tags.selector import FriendlyPlayer
 
 
 class CardSource(CardQuery, metaclass=abc.ABCMeta):
-
     def __init__(self, conditions):
         self.conditions = conditions
 
@@ -34,7 +33,6 @@ class CardSource(CardQuery, metaclass=abc.ABCMeta):
 
 
 class HandSource(CardSource):
-
     def __init__(self, player=FriendlyPlayer(), conditions=[]):
         super().__init__(conditions)
         self.player = player
@@ -125,7 +123,6 @@ class SpecificCard(CardQuery):
 
     @staticmethod
     def __from_json__(card):
-
         return SpecificCard(card)
 
 
@@ -165,7 +162,7 @@ class CollectionSource(CardSource):
 
 
 class LastCard(CardQuery):
-    def __init__(self, player=FriendlyPlayer(),):
+    def __init__(self, player=FriendlyPlayer(), ):
         super().__init__()
         self.player = player
 

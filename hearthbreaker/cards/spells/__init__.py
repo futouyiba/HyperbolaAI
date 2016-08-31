@@ -1,14 +1,3 @@
-from hearthbreaker.cards.spells.neutral import (
-    ArmorPlating,
-    EmergencyCoolant,
-    FinickyCloakfield,
-    ReversingSwitch,
-    RustyHorn,
-    TimeRewinder,
-    WhirlingBlades,
-    TheCoin
-)
-
 from hearthbreaker.cards.spells.druid import (
     Innervate,
     Moonfire,
@@ -35,7 +24,6 @@ from hearthbreaker.cards.spells.druid import (
     TreeOfLife,
     AstralCommunion,
 )
-
 from hearthbreaker.cards.spells.hunter import (
     HuntersMark,
     ArcaneShot,
@@ -60,7 +48,6 @@ from hearthbreaker.cards.spells.hunter import (
     BearTrap,
     Powershot,
 )
-
 from hearthbreaker.cards.spells.mage import (
     ArcaneMissiles,
     IceLance,
@@ -88,7 +75,16 @@ from hearthbreaker.cards.spells.mage import (
     DragonsBreath,
     ArcaneBlast,
 )
-
+from hearthbreaker.cards.spells.neutral import (
+    ArmorPlating,
+    EmergencyCoolant,
+    FinickyCloakfield,
+    ReversingSwitch,
+    RustyHorn,
+    TimeRewinder,
+    WhirlingBlades,
+    TheCoin
+)
 from hearthbreaker.cards.spells.paladin import (
     AvengingWrath,
     BlessedChampion,
@@ -113,7 +109,6 @@ from hearthbreaker.cards.spells.paladin import (
     MusterForBattle,
     SolemnVigil,
 )
-
 from hearthbreaker.cards.spells.priest import (
     CircleOfHealing,
     DivineSpirit,
@@ -138,7 +133,6 @@ from hearthbreaker.cards.spells.priest import (
     LightOfTheNaaru,
     Resurrect,
 )
-
 from hearthbreaker.cards.spells.rogue import (
     Assassinate,
     Backstab,
@@ -161,7 +155,6 @@ from hearthbreaker.cards.spells.rogue import (
     Sabotage,
     GangUp,
 )
-
 from hearthbreaker.cards.spells.shaman import (
     AncestralHealing,
     AncestralSpirit,
@@ -184,7 +177,6 @@ from hearthbreaker.cards.spells.shaman import (
     LavaShock,
     AncestralKnowledge,
 )
-
 from hearthbreaker.cards.spells.warlock import (
     MortalCoil,
     Hellfire,
@@ -206,7 +198,6 @@ from hearthbreaker.cards.spells.warlock import (
     Demonwrath,
     FistOfJaraxxus,
 )
-
 from hearthbreaker.cards.spells.warrior import (
     BattleRage,
     Brawl,

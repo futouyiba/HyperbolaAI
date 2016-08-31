@@ -1,5 +1,9 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard
+from hearthbreaker.cards.minions.warlock import Imp
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Minion
 from hearthbreaker.tags.action import Kill, Damage
 from hearthbreaker.tags.base import Effect, ActionTag
@@ -7,9 +11,6 @@ from hearthbreaker.tags.card_source import CollectionSource
 from hearthbreaker.tags.condition import IsType, MinionIsTarget
 from hearthbreaker.tags.event import TurnStarted, TurnEnded, CardDiscarded
 from hearthbreaker.tags.selector import SelfSelector, EnemyPlayer, CharacterSelector, RandomPicker
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
-from hearthbreaker.cards.minions.warlock import Imp
 
 
 class MortalCoil(SpellCard):
@@ -134,8 +135,8 @@ class SenseDemons(SpellCard):
         for i in range(0, 2):
             demon_card = game.random_draw(game.current_player.deck.cards,
                                           lambda c: not c.drawn and
-                                          c.is_minion() and
-                                          c.minion_type == MINION_TYPE.DEMON)
+                                                    c.is_minion() and
+                                                    c.minion_type == MINION_TYPE.DEMON)
             if demon_card:
                 demon_card.drawn = True
                 player.deck.left -= 1

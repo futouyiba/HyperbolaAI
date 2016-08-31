@@ -206,11 +206,15 @@ class Game(Bindable):
         self.check_delayed()
         self._has_turn_ended = True
 
-    def copy(self):
+    def copy(self, keep=False):
         copied_game = copy.copy(self)
-        copied_game.events = {}
-        copied_game._all_cards_played = []
-        copied_game.players = [player.copy(copied_game) for player in self.players]
+        if not keep:
+            copied_game.events = {}
+            copied_game._all_cards_played = []
+        else:
+            copied_game.events = copy.copy(self.events)
+            copied_game._all_cards_played = [copy.copy(card) for card in self._all_cards_played]
+        copied_game.players = [player.copy(copied_game, keep) for player in self.players]
         copied_game.playersInOrder = [copied_game.players[self.play_order[0]], copied_game.players[self.play_order[1]]]
         if self.current_player is self.players[0]:
             copied_game.current_player = copied_game.players[0]
@@ -365,10 +369,17 @@ class Player(Bindable):
     def __str__(self):  # pragma: no cover
         return "Player: " + self.name
 
-    def copy(self, new_game):
+    def copy(self, new_game, keep=False):
         copied_player = Player(self.name, self.deck.copy(), self.agent, new_game)
-
-        copied_player.hero = self.hero.copy(copied_player)
+        if keep:
+            copied_player.fatigue = self.fatigue
+            copied_player.spell_multiplier = self.spell_multiplier
+            copied_player.heal_multiplier = self.heal_multiplier
+            copied_player.heal_does_damage = self.heal_does_damage
+            copied_player.double_deathrattle = self.double_deathrattle
+            copied_player.mana_filters = self.mana_filters
+            copied_player.cards_played = self.cards_played
+        copied_player.hero = self.hero.copy(copied_player, keep)
         copied_player.graveyard = copy.copy(self.graveyard)
         copied_player.minions = [minion.copy(copied_player, new_game) for minion in self.minions]
         copied_player.hand = [copy.copy(card) for card in self.hand]

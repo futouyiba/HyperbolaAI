@@ -1,9 +1,10 @@
 import unittest
+
+from hearthbreaker.agents.trade.possible_play import PossiblePlays
 from hearthbreaker.cards import ArgentSquire, DireWolfAlpha, HarvestGolem, BloodfenRaptor, MagmaRager, Wisp, Ysera
 from hearthbreaker.cards.spells.neutral import TheCoin
-from tests.agents.trade.test_helpers import TestHelpers
-from hearthbreaker.agents.trade.possible_play import PossiblePlays
 from tests.agents.trade.test_case_mixin import TestCaseMixin
+from tests.agents.trade.test_helpers import TestHelpers
 
 
 class TestTradeAgentPlayTests(TestCaseMixin, unittest.TestCase):

@@ -2,16 +2,16 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import DoNothingAgent
+from hearthbreaker.cards import *
 from hearthbreaker.cards.base import SpellCard
+from hearthbreaker.constants import CHARACTER_CLASS, MINION_TYPE, CARD_RARITY
 from hearthbreaker.engine import Game
+from hearthbreaker.replay import playback, Replay
 from hearthbreaker.tags.card_source import CollectionSource
 from hearthbreaker.tags.condition import HasCardName
 from tests.agents.testing_agents import SelfSpellTestingAgent, EnemySpellTestingAgent, OneCardPlayingAgent, \
     EnemyMinionSpellTestingAgent, CardTestingAgent, PlayAndAttackAgent
-from hearthbreaker.constants import CHARACTER_CLASS, MINION_TYPE, CARD_RARITY
-from hearthbreaker.replay import playback, Replay
 from tests.testing_utils import generate_game_for, StackedDeck, mock
-from hearthbreaker.cards import *
 
 
 class TestDruid(unittest.TestCase):
@@ -1076,6 +1076,7 @@ class TestDruid(unittest.TestCase):
                 new_minon = query.get_card(player, player, self)
                 player.hand.append(new_minon)
                 new_minon.attach(new_minon, player)
+
         game = generate_game_for(MalornePortal, Naturalize, OneCardPlayingAgent, OneCardPlayingAgent)
 
         for turn in range(3):

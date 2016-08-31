@@ -2,12 +2,12 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import PredictableAgent, DoNothingAgent
+from hearthbreaker.cards import *
+from hearthbreaker.replay import playback, Replay
 from hearthbreaker.tags.status import ChangeAttack
 from tests.agents.testing_agents import OneCardPlayingAgent, CardTestingAgent, EnemyMinionSpellTestingAgent, \
     PlayAndAttackAgent
 from tests.testing_utils import generate_game_for
-from hearthbreaker.replay import playback, Replay
-from hearthbreaker.cards import *
 
 
 class TestPaladin(unittest.TestCase):

@@ -12,16 +12,33 @@
             "properties": {
               "hero": {
                 "type": "string",
-                "enum": ["Jaina", "Malfurion", "Rexxar", "Anduin", "Uther", "Gul'dan", "Valeera", "Thrall", "Garrosh"]
+                "enum": [
+                  "Jaina",
+                  "Malfurion",
+                  "Rexxar",
+                  "Anduin",
+                  "Uther",
+                  "Gul'dan",
+                  "Valeera",
+                  "Thrall",
+                  "Garrosh"
+                ]
               },
               "cards": {
                 "type": "array",
-                "items": [{"type": "string"}],
+                "items": [
+                  {
+                    "type": "string"
+                  }
+                ],
                 "maxItems": 30,
                 "minItems": 1
               }
             },
-            "required": ["hero", "cards"]
+            "required": [
+              "hero",
+              "cards"
+            ]
           }
         },
         "keep": {
@@ -45,28 +62,51 @@
           "items": {
             "type": "integer"
           }
-
         }
       },
-      "required": ["decks", "keep", "random"]
+      "required": [
+        "decks",
+        "keep",
+        "random"
+      ]
     },
     "moves": {
       "type": "array",
       "items": {
         "oneOf": [
-          {"title": "Play",    "$ref": "#/definitions/play"},
-          {"title": "Attack",  "$ref": "#/definitions/attack"},
-          {"title": "Power",   "$ref": "#/definitions/power"},
-          {"title": "Start",   "$ref": "#/definitions/start"},
-          {"title": "End",     "$ref": "#/definitions/end"},
-          {"title": "Concede", "$ref": "#/definitions/concede"}
+          {
+            "title": "Play",
+            "$ref": "#/definitions/play"
+          },
+          {
+            "title": "Attack",
+            "$ref": "#/definitions/attack"
+          },
+          {
+            "title": "Power",
+            "$ref": "#/definitions/power"
+          },
+          {
+            "title": "Start",
+            "$ref": "#/definitions/start"
+          },
+          {
+            "title": "End",
+            "$ref": "#/definitions/end"
+          },
+          {
+            "title": "Concede",
+            "$ref": "#/definitions/concede"
+          }
         ]
       },
       "additionalItems": false
-
     }
   },
-  "required": ["header", "moves"],
+  "required": [
+    "header",
+    "moves"
+  ],
   "definitions": {
     "play": {
       "title": "Play",
@@ -93,7 +133,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["card_index"]
+          "required": [
+            "card_index"
+          ]
         },
         "index": {
           "type": "integer",
@@ -105,7 +147,10 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name", "card"]
+      "required": [
+        "name",
+        "card"
+      ]
     },
     "attack": {
       "title": "Attack",
@@ -126,7 +171,11 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name", "character", "target"]
+      "required": [
+        "name",
+        "character",
+        "target"
+      ]
     },
     "power": {
       "name": "Power",
@@ -144,7 +193,9 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name"]
+      "required": [
+        "name"
+      ]
     },
     "start": {
       "title": "Start",
@@ -159,7 +210,9 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name"]
+      "required": [
+        "name"
+      ]
     },
     "end": {
       "title": "End",
@@ -174,7 +227,9 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name"]
+      "required": [
+        "name"
+      ]
     },
     "concede": {
       "title": "Concede",
@@ -189,7 +244,9 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name"]
+      "required": [
+        "name"
+      ]
     },
     "random": {
       "type": "array",
@@ -220,8 +277,9 @@
           }
         }
       },
-      "required": ["player"]
+      "required": [
+        "player"
+      ]
     }
-
   }
 }

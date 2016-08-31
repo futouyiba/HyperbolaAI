@@ -1,4 +1,6 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SecretCard, SpellCard
 from hearthbreaker.cards.minions.mage import SpellbenderMinion, MirrorImageMinion
 from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
@@ -8,7 +10,6 @@ from hearthbreaker.tags.condition import IsMinion
 from hearthbreaker.tags.event import TurnEnded
 from hearthbreaker.tags.selector import CurrentPlayer, Count, DeadMinionSelector, BothPlayer
 from hearthbreaker.tags.status import Immune, Frozen, ManaChange
-import hearthbreaker.targeting
 
 
 class ArcaneMissiles(SpellCard):

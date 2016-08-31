@@ -192,7 +192,7 @@ class FloatingWatcher(MinionCard):
     def create_minion(self, player):
         return Minion(4, 4, effects=[Effect(CharacterDamaged(And(IsHero(), OwnersTurn())),
                                             ActionTag(Give([Buff(ChangeAttack(2)), Buff(ChangeHealth(2))]),
-                                            SelfSelector()))])
+                                                      SelfSelector()))])
 
 
 class MistressOfPain(MinionCard):

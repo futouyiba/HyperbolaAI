@@ -1,14 +1,15 @@
 import copy
+
+import hearthbreaker.targeting
 from hearthbreaker.cards.base import SpellCard, SecretCard
+from hearthbreaker.cards.minions.paladin import SilverHandRecruit
+from hearthbreaker.cards.weapons.paladin import LightsJustice
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
 from hearthbreaker.tags.action import Draw
 from hearthbreaker.tags.base import Effect, Buff, ActionTag
 from hearthbreaker.tags.event import Attack
 from hearthbreaker.tags.selector import PlayerSelector, PlayerOne, PlayerTwo, BothPlayer, Count, DeadMinionSelector
 from hearthbreaker.tags.status import DoubleAttack, ManaChange
-import hearthbreaker.targeting
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY
-from hearthbreaker.cards.minions.paladin import SilverHandRecruit
-from hearthbreaker.cards.weapons.paladin import LightsJustice
 
 
 class AvengingWrath(SpellCard):
@@ -262,7 +263,6 @@ class Repentance(SecretCard):
         super().__init__("Repentance", 1, CHARACTER_CLASS.PALADIN, CARD_RARITY.COMMON)
 
     def _reveal(self, minion):
-
         minion.set_health_to(1)
         super().reveal()
 

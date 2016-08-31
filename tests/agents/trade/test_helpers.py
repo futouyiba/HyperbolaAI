@@ -1,8 +1,9 @@
+import re
+
 from hearthbreaker.agents.basic_agents import RandomAgent
 from hearthbreaker.agents.trade_agent import TradeAgent
 from hearthbreaker.cards import WarGolem
 from hearthbreaker.cards.base import MinionCard
-import re
 from hearthbreaker.cards.spells.neutral import TheCoin
 from hearthbreaker.game_objects import Minion
 from tests.testing_utils import generate_game_for
@@ -10,6 +11,8 @@ from tests.testing_utils import generate_game_for
 
 def t(self):
     return self.name
+
+
 Minion.try_name = t
 
 

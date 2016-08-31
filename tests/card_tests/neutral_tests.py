@@ -2,6 +2,7 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import PredictableAgent, DoNothingAgent
+from hearthbreaker.cards import *
 from hearthbreaker.cards.minions.neutral import V07TR0N, Poultryizer, Nightmare
 from hearthbreaker.constants import CARD_RARITY, MINION_TYPE, CHARACTER_CLASS
 from hearthbreaker.engine import Player
@@ -9,7 +10,6 @@ from tests.agents.testing_agents import OneCardPlayingAgent, CardTestingAgent, S
     PlayAndAttackAgent, EnemyMinionSpellTestingAgent, SelfMinionSpellTestingAgent, InspireTestingAgent
 from tests.card_tests.card_tests import TestUtilities
 from tests.testing_utils import generate_game_for
-from hearthbreaker.cards import *
 
 
 class TestCommon(unittest.TestCase, TestUtilities):
@@ -1861,6 +1861,7 @@ class TestCommon(unittest.TestCase, TestUtilities):
 
         def _choose_index(card, player):
             return 1
+
         game.players[0].agent.choose_index = _choose_index
 
         game.play_single_turn()
@@ -1877,6 +1878,7 @@ class TestCommon(unittest.TestCase, TestUtilities):
 
         def _choose_index(card, player):
             return 1
+
         game.players[0].agent.choose_index = _choose_index
 
         game.play_single_turn()
@@ -1899,6 +1901,7 @@ class TestCommon(unittest.TestCase, TestUtilities):
 
         def _choose_index(card, player):
             return 1
+
         game.players[0].agent.choose_index = _choose_index
 
         game.play_single_turn()

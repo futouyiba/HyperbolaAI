@@ -1,13 +1,13 @@
 from hearthbreaker.cards.base import MinionCard, WeaponCard
+from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
 from hearthbreaker.game_objects import Weapon, Minion
 from hearthbreaker.tags.action import Equip, Give, Heal, Damage, GiveAura
 from hearthbreaker.tags.base import Deathrattle, Battlecry, Effect, Buff, ActionTag, AuraUntil
-from hearthbreaker.tags.selector import PlayerSelector, MinionSelector, SelfSelector, EnemyPlayer, HeroSelector, \
-    BothPlayer, CardSelector
-from hearthbreaker.constants import CHARACTER_CLASS, CARD_RARITY, MINION_TYPE
-from hearthbreaker.tags.status import SetAttack, DivineShield, ChangeHealth, ChangeAttack, ManaChange
 from hearthbreaker.tags.condition import IsType, HasCardName, MinionHasDeathrattle
 from hearthbreaker.tags.event import MinionSummoned, MinionDied, CardPlayed
+from hearthbreaker.tags.selector import PlayerSelector, MinionSelector, SelfSelector, EnemyPlayer, HeroSelector, \
+    BothPlayer, CardSelector
+from hearthbreaker.tags.status import SetAttack, DivineShield, ChangeHealth, ChangeAttack, ManaChange
 
 
 class AldorPeacekeeper(MinionCard):
@@ -69,7 +69,7 @@ class CobaltGuardian(MinionCard):
 
     def create_minion(self, player):
         return Minion(6, 3, effects=[Effect(MinionSummoned(IsType(MINION_TYPE.MECH)), ActionTag(Give(DivineShield()),
-                                            SelfSelector()))])
+                                                                                                SelfSelector()))])
 
 
 class SilverHandRecruit(MinionCard):

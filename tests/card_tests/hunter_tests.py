@@ -2,11 +2,11 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import DoNothingAgent, PredictableAgent
+from hearthbreaker.cards import *
 from hearthbreaker.constants import MINION_TYPE
 from tests.agents.testing_agents import CardTestingAgent, OneCardPlayingAgent, WeaponTestingAgent, \
     PlayAndAttackAgent, SelfSpellTestingAgent
 from tests.testing_utils import generate_game_for, mock
-from hearthbreaker.cards import *
 
 
 class TestHunter(unittest.TestCase):
@@ -251,6 +251,7 @@ class TestHunter(unittest.TestCase):
                     game.play_card(player.hand[0])
                 if player.mana == 7:
                     player.minions[0].attack()
+
         game = generate_game_for(FreezingTrap, BoulderfistOgre, CardTestingAgent, FreezingTrapAgent)
 
         for turn in range(0, 12):
@@ -598,7 +599,7 @@ class TestHunter(unittest.TestCase):
         self.assertEqual(1, len(game.current_player.secrets))
         self.assertEqual(0, len(game.other_player.minions))
 
-        game.play_single_turn()     # Player 2 will play King Krush, which will charge a whelp
+        game.play_single_turn()  # Player 2 will play King Krush, which will charge a whelp
         self.assertEqual(1, len(game.other_player.secrets))  # The snake trap will not be proced as the board is full
         self.assertEqual(6, len(game.other_player.minions))
         self.assertEqual(1, len(game.current_player.minions))
@@ -904,7 +905,7 @@ class TestHunter(unittest.TestCase):
 
         game.other_player.agent.choose_target = lambda x: game.players[0].hero
 
-        game.play_single_turn()     # Player 2 will play King Krush, which will charge the enemy hero's face
+        game.play_single_turn()  # Player 2 will play King Krush, which will charge the enemy hero's face
         self.assertEqual(1, len(game.other_player.secrets))  # The bear trap will not be proced as the board is full
         self.assertEqual(7, len(game.other_player.minions))
         self.assertEqual(1, len(game.current_player.minions))

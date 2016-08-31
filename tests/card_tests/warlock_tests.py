@@ -2,11 +2,11 @@ import random
 import unittest
 
 from hearthbreaker.agents.basic_agents import PredictableAgent, DoNothingAgent
+from hearthbreaker.cards import *
+from hearthbreaker.constants import MINION_TYPE
 from tests.agents.testing_agents import OneCardPlayingAgent, EnemySpellTestingAgent, \
     CardTestingAgent, EnemyMinionSpellTestingAgent, PlayAndAttackAgent, HeroPowerAndCardPlayingAgent
-from hearthbreaker.constants import MINION_TYPE
 from tests.testing_utils import generate_game_for
-from hearthbreaker.cards import *
 
 
 class TestWarlock(unittest.TestCase):
@@ -550,6 +550,7 @@ class TestWarlock(unittest.TestCase):
 
         def _choose_index(card, player):
             return 1
+
         game.players[0].agent.choose_index = _choose_index
 
         self.assertEqual(2, len(game.players[0].minions))

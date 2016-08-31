@@ -1,4 +1,5 @@
 import copy
+
 from hearthbreaker.agents.basic_agents import DoNothingAgent
 
 
@@ -9,7 +10,6 @@ class CardTestingAgent(DoNothingAgent):
         self.player = None
 
     def do_turn(self, player):
-
         self.player = player
         while len(player.hand) > 0 and player.hand[0].can_use(player, player.game):
             player.game.play_card(player.hand[0])
