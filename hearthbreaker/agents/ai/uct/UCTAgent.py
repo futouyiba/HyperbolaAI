@@ -1,11 +1,12 @@
 import random
+import json
 
-from aiplatform.ai.ThinkAgent import ThinkAgent
+from hearthbreaker.agents.ai.ThinkAgent import ThinkAgent
 from hearthbreaker.agents.basic_agents import RandomAgent
 
 
 class SimpleUCTAgent(RandomAgent):
-    def __init__(self, finishrate, period):
+    def __init__(self, finishrate=0.2, period=10):
         RandomAgent.__init__(self)
         self.__finishrate = finishrate
         self.__period = period
@@ -14,7 +15,9 @@ class SimpleUCTAgent(RandomAgent):
         return [random.choice([True, False]) for i in range(0, 4)]
 
     def do_turn(self, player):
-        self.__thinkagent = ThinkAgent(player.game, self.__period)
+        open('log','a').write('\n'.join([json.dumps(card.__to_json__()) for card in player.hand]))
+        open('log','a').write('==============================\n')
+        self.__thinkagent = ThinkAgent(player, self.__period)
         nextgame = self.__thinkagent.think()
         '''Recover human player's information'''
         nextgame.players[nextgame.play_order[0]] = self.__thinkagent.getGame().players[nextgame.play_order[0]]

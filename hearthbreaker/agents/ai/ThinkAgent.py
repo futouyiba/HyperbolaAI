@@ -10,8 +10,9 @@ This agent copy current game to mind and play with himself
 
 
 class ThinkAgent:
-    def __init__(self, game, period):
-        self.__game = game
+    def __init__(self, player, period):
+        self.__player = player
+        self.__game = player.game
         self.__period = period
         self.__testtime = 10
 
@@ -69,10 +70,10 @@ class ThinkAgent:
     def __copyPlayerToMind(self):
         onedeck = None
         for player in self.__gameinmind.players:
-            if player.name == 'uct':
+            if player.name == self.__player.name:
                 onedeck = player.deck
         if onedeck is None:
-            raise Exception("can't find uct agent")
+            raise Exception("can't find agent")
         copied_players = [(Player(player.name, onedeck.copy(), RandomAgent(), self.__gameinmind), player) for player in
                           self.__game.players]
         for copied_player, original_player in copied_players:

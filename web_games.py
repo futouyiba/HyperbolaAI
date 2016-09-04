@@ -1,12 +1,15 @@
 import json
-import timeit
 
+from flask import Flask
 from hearthbreaker.agents.ai.uct.UCTAgent import SimpleUCTAgent
 from hearthbreaker.agents.basic_agents import RandomAgent
 from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
 from hearthbreaker.engine import Game, Deck, card_lookup
+from hearthbreaker.serialization.serialization import serialize
 
+app = Flask(__name__)
+ggame = None
 
 def load_deck(filename):
     cards = []
@@ -30,43 +33,17 @@ def load_deck(filename):
     return Deck(cards, hero_for_class(character_class))
 
 
-_totalPlay = 10
-_totalCount = 0.0
-
-
+@app.route("/newgame")
 def do_stuff():
-    global _totalTry
-    _count = 0
-
-    def play_game():
-        global _totalCount
-        nonlocal _count
-        _count += 1
-        new_game = game.copy()
-        try:
-            new_game.start()
-        except Exception as e:
-            print(json.dumps(new_game.__to_json__(), default=lambda o: o.__to_json__(), indent=1))
-            print(new_game._all_cards_played)
-            raise e
-
-        if new_game.playersInOrder[0].hero.dead and new_game._turns_passed < 50:
-            _totalCount += 1.0
-        del new_game
-
-        if _count % 1000 == 0:
-            print("---- game #{} ----".format(_count))
-
+    global ggame
     deck1 = load_deck("zoo.hsdeck")
     deck2 = load_deck("zoo.hsdeck")
     '''Give agent object and play name'''
     game = Game([deck1, deck2], [(RandomAgent(), "opponent"), (SimpleUCTAgent(0.2, 10), "uct")])
-    # game = Game([deck1, deck2], [(UCTAgent.SimpleUCTAgent(0.1,100),"opponent"), (UCTAgent.SimpleUCTAgent(0.2,100),
-    #                                                                              "uct")])
-
-    print(timeit.timeit(play_game, 'gc.enable()', number=_totalPlay))
-    print("uct win rate:%0.2f" % (_totalCount / _totalPlay))
-
+    ggame = game
+    # game.start()
+    res = {"result": 1, "game": serialize(game)}
+    return json.dumps(res)
 
 if __name__ == "__main__":
-    do_stuff()
+    app.run(host='0.0.0.0', port=5000, debug=True)
