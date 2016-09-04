@@ -42,8 +42,8 @@ def do_stuff():
     game = Game([deck1, deck2], [(RandomAgent(), "opponent"), (SimpleUCTAgent(0.2, 10), "uct")])
     ggame = game
     # game.start()
-    res = {"result": 1, "game": serialize(game)}
-    return json.dumps(res)
+    res = """{"result": 1, "game": """+ serialize(game)+"}"
+    return res
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
