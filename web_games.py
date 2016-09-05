@@ -254,8 +254,9 @@ def do_stuff():
     '''Give agent object and play name'''
     game = Game([deck1, deck2], [(WebAgent(), "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
     ggame = game
-    res = {"result": 1, "game": serialize(game)}
-    return json.dumps(res)
+    # game.start()
+    res = """{"result": 1, "game": """+ serialize(game)+"}"
+    return res
 
 
 @app.route("/start")
