@@ -1,4 +1,5 @@
 import json
+import socket
 import sys
 
 from flask import Flask
@@ -36,8 +37,13 @@ def load_deck(filename):
 
 
 class WebAgent:
+    def __init__(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(("192.168.4.29", 5000))
+        s.listen(1)
+        self.__conn, addr = s.accept()
+
     def do_turn(self, player):
-        index = 0
         action = self.choose_action()
         while not (action == "quit" or action == "end"):
             if action == "play":
@@ -51,13 +57,17 @@ class WebAgent:
             elif action == "power":
                 if player.hero.power.can_use():
                     player.hero.power.use()
-            index += 1
-            action = self.choose_action()
+            self.choose_action()
         if action == "quit":
             sys.exit(0)
 
     def choose_action(self):
-        return None
+        global ggame
+        self.__conn.send(bytes('''{"result":1,"game":''' + serialize(ggame) + ''',"next":"choose_action"}\0''','utf8'))
+        recv = self.__conn.recv(1024)
+        recv=recv.decode('utf8')
+        print(recv)
+        return recv
 
         # def choose_card(self, player):
         #     filtered_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
@@ -125,12 +135,13 @@ class WebAgent:
         #
         #     return renderer.selected_target
         #
+
     def do_card_check(self, cards):
 
-         keeping = [True, True, True]
-         if len(cards) > 3:
-             keeping.append(True)
-         return keeping
+        keeping = [True, True, True]
+        if len(cards) > 3:
+            keeping.append(True)
+        return keeping
         #
         # def choose_target(self, targets):
         #
@@ -246,24 +257,26 @@ class WebAgent:
         #     return options[selected]
 
 
-@app.route("/newgame")
-def do_stuff():
-    global ggame
-    deck1 = load_deck("zoo.hsdeck")
-    deck2 = load_deck("zoo.hsdeck")
-    '''Give agent object and play name'''
-    game = Game([deck1, deck2], [(WebAgent(), "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
-    ggame = game
-    # game.start()
-    res = """{"result": 1, "game": """+ serialize(game)+"}"
-    return res
+# @app.route("/newgame")
+# def do_stuff():
+#     global ggame
+deck1 = load_deck("zoo.hsdeck")
+deck2 = load_deck("zoo.hsdeck")
+#     '''Give agent object and play name'''
+ggame = Game([deck1, deck2], [(WebAgent(), "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
+ggame.start()
+# ggame = game
+# print(game.start())
+# res = """{"result": 1, "game": """ + serialize(game) + ''',"next":"do_turn"}'''
+# return res
 
 
-@app.route("/start")
-def start_game():
-    global ggame
-    ggame.start()
-    return json.dumps({"result": 1})
+# @app.route("/do_turn")
+# def start_game():
+#     global ggame
+#     ggame.__next__()
+#     return json.dumps(''''{"result": 1} ''')
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0', port=5000, debug=True)
