@@ -55,7 +55,6 @@ class WebAgent:
     def reconnect(self):
         self.__conn.close()
         self.__soc.close()
-        raise ConnectionResetError()
 
     def do_turn(self, player):
         global ggame
@@ -97,10 +96,7 @@ class WebAgent:
         global ggame
         self.__conn.send(bytes('''{"result":%s,"game":''' % res + serialize(ggame) + ''',"next":"choose_action"}\0''',
                                'utf8'))
-        try:
-            recv = recvAll(self.__conn)
-        except ConnectionResetError:
-            self.reconnect()
+        recv = recvAll(self.__conn)
         return recv[1:recv.rindex('/')], recv
 
     def choose_card(self, player, playaction):
@@ -225,12 +221,13 @@ if __name__ == '__main__':
     deck2 = load_deck("zoo.hsdeck")
     logfile = open('hearthbreaker.log', 'a')
     while True:
-        ggame = Game([deck1, deck2], [(WebAgent(sys.argv[1], sys.argv[2]), "webagent"), (SimpleUCTAgent(0.2, 10),
-                                                                                         "uct")])
+        agent=WebAgent(sys.argv[1], sys.argv[2])
+        ggame = Game([deck1, deck2], [(agent, "webagent"), (SimpleUCTAgent(0.2, 10),"uct")])
         try:
             ggame.start()
         except ConnectionResetError:
             logfile.write('Restart game due to connection reset\n')
+            agent.reconnect()
         except Exception as e:
             traceback.print_exc(file=logfile)
             logfile.write('\n')

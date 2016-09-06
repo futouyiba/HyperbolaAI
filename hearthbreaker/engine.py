@@ -141,7 +141,6 @@ class Game(Bindable):
     def play_single_turn(self):
         self._start_turn()
         self.current_player.agent.do_turn(self.current_player)
-        print(self.current_player.name, self.current_player.hero.health, '\n')
         self._end_turn()
 
     def _start_turn(self):
