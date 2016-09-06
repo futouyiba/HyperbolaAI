@@ -15,8 +15,6 @@ class SimpleUCTAgent(RandomAgent):
         return [random.choice([True, False]) for i in range(0, 4)]
 
     def do_turn(self, player):
-        open('log','a').write('\n'.join([json.dumps(card.__to_json__()) for card in player.hand]))
-        open('log','a').write('==============================\n')
         self.__thinkagent = ThinkAgent(player, self.__period)
         nextgame = self.__thinkagent.think()
         '''Recover human player's information'''

@@ -1,17 +1,20 @@
-import json
 import socket
 import sys
 
-from flask import Flask
 from hearthbreaker.agents.ai.uct.UCTAgent import SimpleUCTAgent
-from hearthbreaker.agents.basic_agents import RandomAgent
 from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
 from hearthbreaker.engine import Game, Deck, card_lookup
 from hearthbreaker.serialization.serialization import serialize
 
-app = Flask(__name__)
 ggame = None
+
+
+def recvAll(conn):
+    data = conn.recv(1024).decode('utf8')
+    while data[-1] != '\0':
+        data += conn.recv(1024).decode('utf8')
+    return data[:-1]
 
 
 def load_deck(filename):
@@ -38,16 +41,22 @@ def load_deck(filename):
 
 class WebAgent:
     def __init__(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(("52.42.106.167", 9798))
-        s.listen(1)
-        self.__conn, addr = s.accept()
+        self.__soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__soc.bind(("52.42.106.167", 9798))
+        self.__soc.listen(1)
+        self.__conn, addr = self.__soc.accept()
+
+    def reconnect(self):
+        self.__conn.close()
+        self.__soc.close()
+        raise ConnectionResetError()
 
     def do_turn(self, player):
-        action = self.choose_action()
+        res = 1
+        action, playaction = self.choose_action()
         while not (action == "quit" or action == "end"):
             if action == "play":
-                card = self.choose_card(player)
+                card, res = self.choose_card(player, playaction)
                 if card is not None:
                     player.game.play_card(card)
             elif action == "attack":
@@ -57,87 +66,77 @@ class WebAgent:
             elif action == "power":
                 if player.hero.power.can_use():
                     player.hero.power.use()
-            self.choose_action()
+            self.choose_action(res)
         if action == "quit":
             sys.exit(0)
 
-    def choose_action(self):
+    def choose_action(self, res=1):
         global ggame
-        self.__conn.send(bytes('''{"result":1,"game":''' + serialize(ggame) + ''',"next":"choose_action"}\0''','utf8'))
-        recv = self.__conn.recv(1024)
-        recv=recv.decode('utf8')
-        print(recv)
-        return recv
+        self.__conn.send(bytes('''{"result":%s,"game":''' % res + serialize(ggame) + ''',"next":"choose_action"}\0''',
+                               'utf8'))
+        try:
+            recv = recvAll(self.__conn)
+        except ConnectionResetError:
+            self.reconnect()
+        return recv[1:recv.rindex('/')], recv
 
-        # def choose_card(self, player):
-        #     filtered_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
-        #     if len(filtered_cards) is 0:
-        #         return None
-        #     renderer.targets = filtered_cards
-        #     renderer.selected_target = renderer.targets[0]
-        #     renderer.draw_game()
-        #     self.window.addstr(0, 0, "Choose Card")
-        #     self.window.refresh()
-        #     ch = 0
-        #     index = 0
-        #     while ch != 10 and ch != 27:
-        #         ch = self.game_window.getch()
-        #
-        #         if ch == curses.KEY_LEFT:
-        #             index -= 1
-        #             if index < 0:
-        #                 index = len(renderer.targets) - 1
-        #         if ch == curses.KEY_RIGHT:
-        #             index += 1
-        #             if index == len(renderer.targets):
-        #                 index = 0
-        #         renderer.selected_target = renderer.targets[index]
-        #         renderer.draw_game()
-        #         self.window.addstr(0, 0, "Choose Card")
-        #         self.window.refresh()
-        #     renderer.targets = None
-        #     if ch == 27:
-        #         return None
-        #
-        #     return renderer.selected_target
-        #
-        # def choose_attacker(self, player):
-        #     filtered_attackers = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
-        #     if player.hero.can_attack():
-        #         filtered_attackers.append(player.hero)
-        #     if len(filtered_attackers) is 0:
-        #         return None
-        #     renderer.targets = filtered_attackers
-        #     renderer.selected_target = renderer.targets[0]
-        #     renderer.draw_game()
-        #     self.window.addstr(0, 0, "Choose attacker")
-        #     self.window.refresh()
-        #     ch = 0
-        #     index = 0
-        #     while ch != 10 and ch != 27:
-        #         ch = self.game_window.getch()
-        #         self.window.addstr(0, 0, "{0}".format(ch))
-        #         self.window.refresh()
-        #         if ch == curses.KEY_LEFT:
-        #             index -= 1
-        #             if index < 0:
-        #                 index = len(renderer.targets) - 1
-        #         if ch == curses.KEY_RIGHT:
-        #             index += 1
-        #             if index == len(renderer.targets):
-        #                 index = 0
-        #         renderer.selected_target = renderer.targets[index]
-        #         renderer.draw_game()
-        #         self.window.refresh()
-        #     renderer.targets = None
-        #     if ch == 27:
-        #         return None
-        #
-        #     return renderer.selected_target
-        #
+    def choose_card(self, player, playaction):
+        res = 1
+        filtered_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
+        if len(filtered_cards) is 0:
+            res = 0
+            return None, res
+        playname = playaction[playaction.rindex('/') + 1:]
+        hit = False
+        index = 0
+        for i, cards in enumerate(filtered_cards):
+            if cards.name == playname:
+                hit = True
+                index = i
+                break
+        if hit:
+            res = 1
+            return filtered_cards[index], res
+        else:
+            res = 0
+            return None, res
+            #
+            # def choose_attacker(self, player):
+            #     filtered_attackers = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
+            #     if player.hero.can_attack():
+            #         filtered_attackers.append(player.hero)
+            #     if len(filtered_attackers) is 0:
+            #         return None
+            #     renderer.targets = filtered_attackers
+            #     renderer.selected_target = renderer.targets[0]
+            #     renderer.draw_game()
+            #     self.window.addstr(0, 0, "Choose attacker")
+            #     self.window.refresh()
+            #     ch = 0
+            #     index = 0
+            #     while ch != 10 and ch != 27:
+            #         ch = self.game_window.getch()
+            #         self.window.addstr(0, 0, "{0}".format(ch))
+            #         self.window.refresh()
+            #         if ch == curses.KEY_LEFT:
+            #             index -= 1
+            #             if index < 0:
+            #                 index = len(renderer.targets) - 1
+            #         if ch == curses.KEY_RIGHT:
+            #             index += 1
+            #             if index == len(renderer.targets):
+            #                 index = 0
+            #         renderer.selected_target = renderer.targets[index]
+            #         renderer.draw_game()
+            #         self.window.refresh()
+            #     renderer.targets = None
+            #     if ch == 27:
+            #         return None
+            #
+            #     return renderer.selected_target
+            #
 
     def do_card_check(self, cards):
-
         keeping = [True, True, True]
         if len(cards) > 3:
             keeping.append(True)
@@ -256,26 +255,15 @@ class WebAgent:
         #     return options[selected]
 
 
-# @app.route("/newgame")
-# def do_stuff():
-#     global ggame
 deck1 = load_deck("zoo.hsdeck")
 deck2 = load_deck("zoo.hsdeck")
-#     '''Give agent object and play name'''
-ggame = Game([deck1, deck2], [(WebAgent(), "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
-ggame.start()
-# ggame = game
-# print(game.start())
-# res = """{"result": 1, "game": """ + serialize(game) + ''',"next":"do_turn"}'''
-# return res
-
-
-# @app.route("/do_turn")
-# def start_game():
-#     global ggame
-#     ggame.__next__()
-#     return json.dumps(''''{"result": 1} ''')
-
-
-# if __name__ == "__main__":
-#     app.run(host='0.0.0.0', port=5000, debug=True)
+logfile = open('hearthbreaker.log', 'a')
+while True:
+    ggame = Game([deck1, deck2], [(WebAgent(), "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
+    try:
+        ggame.start()
+    except ConnectionResetError:
+        logfile.write('Restart game due to connection reset\n')
+        # except Exception as e:
+        #     traceback.print_exc(file=logfile)
+        #     logfile.write('\n')
