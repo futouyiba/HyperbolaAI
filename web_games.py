@@ -40,6 +40,11 @@ def load_deck(filename):
     return Deck(cards, hero_for_class(character_class))
 
 
+class OperationError(Exception):
+    def __init__(self):
+        Exception.__init__(self)
+
+
 class WebAgent:
     def __init__(self, host, port):
         self.__soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,13 +58,19 @@ class WebAgent:
         raise ConnectionResetError()
 
     def do_turn(self, player):
+        global ggame
         res = 1
         action, playaction = self.choose_action()
         while not (action == "quit" or action == "end"):
             if action == "play":
                 card, res = self.choose_card(player, playaction)
+                backupgame = player.game.copy(keep=True)
                 if card is not None:
-                    player.game.play_card(card)
+                    try:
+                        player.game.play_card(card)
+                    except OperationError:
+                        ggame = backupgame
+                        res = 0
             elif action == "attack":
                 attacker, res = self.choose_attacker(player, playaction)
                 if attacker is not None:
@@ -110,37 +121,28 @@ class WebAgent:
         return keeping
 
     def choose_target(self, targets):
-
         if len(targets) is 0:
-            return None
+            print('Error? no targets available')
+            raise OperationError()
+        self.__conn.send(
+            bytes('''{"result":1,"next":"choose_target","choose_from":[%s]}''' % serialize(targets), 'utf8'))
+        decision = recvAll(self.__conn)
+        final = decision[decision.rindex('/') + 1:]
+        if 0 <= int(final) < len(targets):
+            return targets[int(final)]
+        else:
+            raise OperationError()
 
-        return None
-        #
-        # def choose_index(self, card, player):
-        #     renderer.selection_index = 0
-        #     renderer.draw_game()
-        #     self.window.addstr(0, 0, "Choose placement location")
-        #     self.window.refresh()
-        #     ch = 0
-        #     while ch != 10 and ch != 27:
-        #         ch = self.game_window.getch()
-        #         if ch == curses.KEY_LEFT:
-        #             renderer.selection_index -= 1
-        #             if renderer.selection_index < 0:
-        #                 renderer.selection_index = len(player.minions)
-        #         if ch == curses.KEY_RIGHT:
-        #             renderer.selection_index += 1
-        #             if renderer.selection_index > len(player.minions):
-        #                 renderer.selection_index = 0
-        #         renderer.draw_game()
-        #         self.window.refresh()
-        #     index = renderer.selection_index
-        #     renderer.selection_index = -1
-        #     if ch == 27:
-        #         return -1
-        #
-        #     return index
-        #
+    def choose_index(self, card, player):
+        self.__conn.send(bytes('''{"result":1,"next":"choose_index","choose_from":[%s]}''' % ','.join(
+            [str(x) for x in range(len(player.minions))]), 'utf8'))
+        decision = recvAll(self.__conn)
+        final = decision[decision.rindex('/') + 1:]
+        if 0 <= int(final) <= len(player.minions):
+            return int(final)
+        else:
+            raise OperationError()
+
         # def choose_option(self, options, player):
         #     self.window.addstr(0, 0, "Choose option")
         #     index = 0
