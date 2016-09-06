@@ -73,11 +73,21 @@ class WebAgent:
                         res = 0
             elif action == "attack":
                 attacker, res = self.choose_attacker(player, playaction)
+                backupgame = player.game.copy(keep=True)
                 if attacker is not None:
-                    attacker.attack()
+                    try:
+                        attacker.attack()
+                    except OperationError:
+                        ggame=backupgame
+                        res=0
             elif action == "power":
+                backupgame = player.game.copy(keep=True)
                 if player.hero.power.can_use():
-                    player.hero.power.use()
+                    try:
+                        player.hero.power.use()
+                    except OperationError:
+                        ggame=backupgame
+                        res=0
             self.choose_action(res)
         if action == "quit":
             sys.exit(0)
