@@ -61,7 +61,7 @@ class WebAgent:
                 if card is not None:
                     player.game.play_card(card)
             elif action == "attack":
-                attacker = self.choose_attacker(player)
+                attacker, res = self.choose_attacker(player, playaction)
                 if attacker is not None:
                     attacker.attack()
             elif action == "power":
@@ -82,96 +82,39 @@ class WebAgent:
         return recv[1:recv.rindex('/')], recv
 
     def choose_card(self, player, playaction):
-        res = 1
         filtered_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
         if len(filtered_cards) is 0:
-            res = 0
-            return None, res
+            return None, 0
         playname = playaction[playaction.rindex('/') + 1:]
-        hit = False
-        index = 0
-        for i, cards in enumerate(filtered_cards):
-            if cards.name == playname:
-                hit = True
-                index = i
-                break
-        if hit:
-            res = 1
-            return filtered_cards[index], res
+        if 0 <= int(playname) < len(filtered_cards):
+            return filtered_cards[int(playname)], 1
         else:
-            res = 0
-            return None, res
-            #
-            # def choose_attacker(self, player):
-            #     filtered_attackers = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
-            #     if player.hero.can_attack():
-            #         filtered_attackers.append(player.hero)
-            #     if len(filtered_attackers) is 0:
-            #         return None
-            #     renderer.targets = filtered_attackers
-            #     renderer.selected_target = renderer.targets[0]
-            #     renderer.draw_game()
-            #     self.window.addstr(0, 0, "Choose attacker")
-            #     self.window.refresh()
-            #     ch = 0
-            #     index = 0
-            #     while ch != 10 and ch != 27:
-            #         ch = self.game_window.getch()
-            #         self.window.addstr(0, 0, "{0}".format(ch))
-            #         self.window.refresh()
-            #         if ch == curses.KEY_LEFT:
-            #             index -= 1
-            #             if index < 0:
-            #                 index = len(renderer.targets) - 1
-            #         if ch == curses.KEY_RIGHT:
-            #             index += 1
-            #             if index == len(renderer.targets):
-            #                 index = 0
-            #         renderer.selected_target = renderer.targets[index]
-            #         renderer.draw_game()
-            #         self.window.refresh()
-            #     renderer.targets = None
-            #     if ch == 27:
-            #         return None
-            #
-            #     return renderer.selected_target
-            #
+            return None, 0
+
+    def choose_attacker(self, player, playaction):
+        filtered_attackers = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
+        if player.hero.can_attack():
+            filtered_attackers.append(player.hero)
+        if len(filtered_attackers) is 0:
+            return None, 0
+        playname = playaction[playaction.rindex('/') + 1:]
+        if 0 <= int(playname) < len(filtered_attackers):
+            return filtered_attackers[int(playname)], 1
+        else:
+            return None, 0
 
     def do_card_check(self, cards):
         keeping = [True, True, True]
         if len(cards) > 3:
             keeping.append(True)
         return keeping
-        #
-        # def choose_target(self, targets):
-        #
-        #     if len(targets) is 0:
-        #         return None
-        #     renderer.targets = targets
-        #     renderer.selected_target = renderer.targets[0]
-        #     renderer.draw_game()
-        #     self.window.addstr(0, 0, "Choose target")
-        #     self.window.refresh()
-        #     ch = 0
-        #     index = 0
-        #     while ch != 10 and ch != 27:
-        #         ch = self.game_window.getch()
-        #         if ch == curses.KEY_LEFT:
-        #             index -= 1
-        #             if index < 0:
-        #                 index = len(renderer.targets) - 1
-        #         if ch == curses.KEY_RIGHT:
-        #             index += 1
-        #             if index == len(renderer.targets):
-        #                 index = 0
-        #         renderer.selected_target = renderer.targets[index]
-        #         renderer.draw_game()
-        #         self.window.refresh()
-        #     renderer.targets = None
-        #     if ch == 27:
-        #         return None
-        #
-        #     return renderer.selected_target
+
+    def choose_target(self, targets):
+
+        if len(targets) is 0:
+            return None
+
+        return None
         #
         # def choose_index(self, card, player):
         #     renderer.selection_index = 0
