@@ -1,5 +1,6 @@
 import socket
 import sys
+import traceback
 
 from hearthbreaker.agents.ai.uct.UCTAgent import SimpleUCTAgent
 from hearthbreaker.cards.heroes import hero_for_class
@@ -40,9 +41,9 @@ def load_deck(filename):
 
 
 class WebAgent:
-    def __init__(self):
+    def __init__(self, host, port):
         self.__soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.__soc.bind(("52.42.106.167", 9798))
+        self.__soc.bind((host, int(port)))
         self.__soc.listen(1)
         self.__conn, addr = self.__soc.accept()
 
@@ -255,15 +256,21 @@ class WebAgent:
         #     return options[selected]
 
 
-deck1 = load_deck("zoo.hsdeck")
-deck2 = load_deck("zoo.hsdeck")
-logfile = open('hearthbreaker.log', 'a')
-while True:
-    ggame = Game([deck1, deck2], [(WebAgent(), "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
-    try:
-        ggame.start()
-    except ConnectionResetError:
-        logfile.write('Restart game due to connection reset\n')
-        # except Exception as e:
-        #     traceback.print_exc(file=logfile)
-        #     logfile.write('\n')
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        port = int(sys.argv[2])
+        print('Usage: COMMAND host port')
+        sys.exit(1)
+    deck1 = load_deck("zoo.hsdeck")
+    deck2 = load_deck("zoo.hsdeck")
+    logfile = open('hearthbreaker.log', 'a')
+    while True:
+        ggame = Game([deck1, deck2], [(WebAgent(sys.argv[1], sys.argv[2]), "webagent"), (SimpleUCTAgent(0.2, 10),
+                                                                                         "uct")])
+        try:
+            ggame.start()
+        except ConnectionResetError:
+            logfile.write('Restart game due to connection reset\n')
+        except Exception as e:
+            traceback.print_exc(file=logfile)
+            logfile.write('\n')
