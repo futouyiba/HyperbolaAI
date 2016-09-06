@@ -39,7 +39,7 @@ def load_deck(filename):
 class WebAgent:
     def __init__(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(("52.42.106.167", 5000))
+        s.bind(("52.42.106.167", 9798))
         s.listen(1)
         self.__conn, addr = s.accept()
 
