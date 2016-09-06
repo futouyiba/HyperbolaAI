@@ -39,7 +39,7 @@ def load_deck(filename):
 class WebAgent:
     def __init__(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(("192.168.4.29", 5000))
+        s.bind(("52.42.106.167", 5000))
         s.listen(1)
         self.__conn, addr = s.accept()
 
@@ -223,7 +223,6 @@ class WebAgent:
         #             selected -= 1
         #             if selected < 0:
         #                 selected = len(options) - 1
-        #
         #             while not options[selected].can_choose(player) and selected != starting_selected:
         #                 selected -= 1
         #                 if selected < 0:
