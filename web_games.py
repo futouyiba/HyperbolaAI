@@ -90,7 +90,7 @@ class WebAgent:
                         res=0
             self.choose_action(res)
         if action == "quit":
-            sys.exit(0)
+            raise ConnectionError()
 
     def choose_action(self, res=1):
         print("choose_action")
