@@ -93,6 +93,7 @@ class WebAgent:
             sys.exit(0)
 
     def choose_action(self, res=1):
+        print("choose_action")
         global ggame
         self.__conn.send(bytes('''{"result":%s,"game":''' % res + serialize(ggame) + ''',"next":"choose_action"}\0''',
                                'utf8'))
@@ -103,6 +104,7 @@ class WebAgent:
         return recv[1:recv.rindex('/')], recv
 
     def choose_card(self, player, playaction):
+        print("choose_card")
         filtered_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
         if len(filtered_cards) is 0:
             return None, 0
@@ -113,6 +115,7 @@ class WebAgent:
             return None, 0
 
     def choose_attacker(self, player, playaction):
+        print("choose_attacker")
         filtered_attackers = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
         if player.hero.can_attack():
             filtered_attackers.append(player.hero)
@@ -131,6 +134,7 @@ class WebAgent:
         return keeping
 
     def choose_target(self, targets):
+        print("choose_target")
         if len(targets) is 0:
             print('Error? no targets available')
             raise OperationError()
@@ -144,8 +148,9 @@ class WebAgent:
             raise OperationError()
 
     def choose_index(self, card, player):
+        print("choose_index")
         self.__conn.send(bytes('''{"result":1,"next":"choose_index","choose_from":[%s]}''' % ','.join(
-            [str(x) for x in range(len(player.minions))]), 'utf8'))
+            [str(x) for x in range(len(player.minions)+1)]), 'utf8'))
         decision = recvAll(self.__conn)
         final = decision[decision.rindex('/') + 1:]
         if 0 <= int(final) <= len(player.minions):
