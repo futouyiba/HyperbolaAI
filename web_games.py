@@ -58,10 +58,11 @@ class WebAgent:
 
     def do_turn(self, player):
         global ggame
-        res = 1
         action, playaction = self.choose_action()
-        while not (action == "quit" or action == "end"):
+        while not (action == "quit" or action == "endturn" or action == "restart"):
+            res = 0
             if action == "play":
+                res = 1
                 card, res = self.choose_card(player, playaction)
                 backupgame = player.game.copy(keep=True)
                 if card is not None:
@@ -69,26 +70,25 @@ class WebAgent:
                         player.game.play_card(card)
                     except OperationError:
                         ggame = backupgame
-                        res = 0
             elif action == "attack":
+                res = 1
                 attacker, res = self.choose_attacker(player, playaction)
                 backupgame = player.game.copy(keep=True)
                 if attacker is not None:
                     try:
                         attacker.attack()
                     except OperationError:
-                        ggame=backupgame
-                        res=0
+                        ggame = backupgame
             elif action == "power":
+                res = 1
                 backupgame = player.game.copy(keep=True)
                 if player.hero.power.can_use():
                     try:
                         player.hero.power.use()
                     except OperationError:
-                        ggame=backupgame
-                        res=0
+                        ggame = backupgame
             self.choose_action(res)
-        if action == "quit":
+        if action == "quit" or action == "restart":
             raise ConnectionError()
 
     def choose_action(self, res=1):
@@ -135,7 +135,7 @@ class WebAgent:
             print('Error? no targets available')
             raise OperationError()
         self.__conn.send(
-            bytes('''{"result":1,"next":"choose_target","choose_from":[%s]}''' % serialize(targets), 'utf8'))
+            bytes('''{"result":1,"next":"choose_target","choose_from":[%s]}\0''' % serialize(targets), 'utf8'))
         decision = recvAll(self.__conn)
         final = decision[decision.rindex('/') + 1:]
         if 0 <= int(final) < len(targets):
@@ -145,8 +145,8 @@ class WebAgent:
 
     def choose_index(self, card, player):
         print("choose_index")
-        self.__conn.send(bytes('''{"result":1,"next":"choose_index","choose_from":[%s]}''' % ','.join(
-            [str(x) for x in range(len(player.minions)+1)]), 'utf8'))
+        self.__conn.send(bytes('''{"result":1,"next":"choose_index","choose_from":[%s]}\0''' % ','.join(
+            [str(x) for x in range(len(player.minions) + 1)]), 'utf8'))
         decision = recvAll(self.__conn)
         final = decision[decision.rindex('/') + 1:]
         if 0 <= int(final) <= len(player.minions):
@@ -154,62 +154,62 @@ class WebAgent:
         else:
             raise OperationError()
 
-        # def choose_option(self, options, player):
-        #     self.window.addstr(0, 0, "Choose option")
-        #     index = 0
-        #     selected = 0
-        #     for option in options:
-        #         if index == selected:
-        #             color = curses.color_pair(4)
-        #         else:
-        #             color = curses.color_pair(3)
-        #
-        #         if isinstance(option, Card):
-        #             self.text_window.addstr(0, index * 20, "{0:^19}".format(option.name[:19]), color)
-        #         else:
-        #             self.text_window.addstr(0, index * 20, "{0:^19}".format(option.card.name[:19]), color)
-        #         index += 1
-        #     self.window.refresh()
-        #     self.text_window.refresh()
-        #     ch = 0
-        #     while ch != 10 and ch != 27:
-        #         ch = self.game_window.getch()
-        #         if ch == curses.KEY_LEFT:
-        #             starting_selected = selected
-        #             selected -= 1
-        #             if selected < 0:
-        #                 selected = len(options) - 1
-        #             while not options[selected].can_choose(player) and selected != starting_selected:
-        #                 selected -= 1
-        #                 if selected < 0:
-        #                     selected = len(options) - 1
-        #         if ch == curses.KEY_RIGHT:
-        #             starting_selected = selected
-        #             selected += 1
-        #             if selected == len(options):
-        #                 selected = 0
-        #             while not options[selected].can_choose(player) and selected != starting_selected:
-        #                 selected += 1
-        #                 if selected == len(options):
-        #                     selected = 0
-        #
-        #         index = 0
-        #         for option in options:
-        #             if index == selected:
-        #                 color = curses.color_pair(4)
-        #             else:
-        #                 color = curses.color_pair(3)
-        #             if isinstance(option, Card):
-        #                 self.text_window.addstr(0, index * 20, "{0:^19}".format(option.name[:19]), color)
-        #             else:
-        #                 self.text_window.addstr(0, index * 20, "{0:^19}".format(option.card.name[:19]), color)
-        #             index += 1
-        #         self.window.refresh()
-        #         self.text_window.refresh()
-        #     if ch == 27:
-        #         return None
-        #
-        #     return options[selected]
+            # def choose_option(self, options, player):
+            #     self.window.addstr(0, 0, "Choose option")
+            #     index = 0
+            #     selected = 0
+            #     for option in options:
+            #         if index == selected:
+            #             color = curses.color_pair(4)
+            #         else:
+            #             color = curses.color_pair(3)
+            #
+            #         if isinstance(option, Card):
+            #             self.text_window.addstr(0, index * 20, "{0:^19}".format(option.name[:19]), color)
+            #         else:
+            #             self.text_window.addstr(0, index * 20, "{0:^19}".format(option.card.name[:19]), color)
+            #         index += 1
+            #     self.window.refresh()
+            #     self.text_window.refresh()
+            #     ch = 0
+            #     while ch != 10 and ch != 27:
+            #         ch = self.game_window.getch()
+            #         if ch == curses.KEY_LEFT:
+            #             starting_selected = selected
+            #             selected -= 1
+            #             if selected < 0:
+            #                 selected = len(options) - 1
+            #             while not options[selected].can_choose(player) and selected != starting_selected:
+            #                 selected -= 1
+            #                 if selected < 0:
+            #                     selected = len(options) - 1
+            #         if ch == curses.KEY_RIGHT:
+            #             starting_selected = selected
+            #             selected += 1
+            #             if selected == len(options):
+            #                 selected = 0
+            #             while not options[selected].can_choose(player) and selected != starting_selected:
+            #                 selected += 1
+            #                 if selected == len(options):
+            #                     selected = 0
+            #
+            #         index = 0
+            #         for option in options:
+            #             if index == selected:
+            #                 color = curses.color_pair(4)
+            #             else:
+            #                 color = curses.color_pair(3)
+            #             if isinstance(option, Card):
+            #                 self.text_window.addstr(0, index * 20, "{0:^19}".format(option.name[:19]), color)
+            #             else:
+            #                 self.text_window.addstr(0, index * 20, "{0:^19}".format(option.card.name[:19]), color)
+            #             index += 1
+            #         self.window.refresh()
+            #         self.text_window.refresh()
+            #     if ch == 27:
+            #         return None
+            #
+            #     return options[selected]
 
 
 if __name__ == '__main__':
@@ -221,8 +221,8 @@ if __name__ == '__main__':
     deck2 = load_deck("zoo.hsdeck")
     logfile = open('hearthbreaker.log', 'a')
     while True:
-        agent=WebAgent(sys.argv[1], sys.argv[2])
-        ggame = Game([deck1, deck2], [(agent, "webagent"), (SimpleUCTAgent(0.2, 10),"uct")])
+        agent = WebAgent(sys.argv[1], sys.argv[2])
+        ggame = Game([deck1, deck2], [(agent, "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
         try:
             ggame.start()
         except ConnectionResetError:
@@ -231,3 +231,4 @@ if __name__ == '__main__':
         except Exception as e:
             traceback.print_exc(file=logfile)
             logfile.write('\n')
+            agent.reconnect()
