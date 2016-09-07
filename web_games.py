@@ -12,6 +12,7 @@ ggame = None
 
 
 def recvAll(conn):
+    print('Recving from client ...')
     data = conn.recv(1024).decode('utf8')
     while data[-1] != '\0':
         data += conn.recv(1024).decode('utf8')
