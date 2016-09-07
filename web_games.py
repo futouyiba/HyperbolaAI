@@ -62,7 +62,6 @@ class WebAgent:
         while not (action == "quit" or action == "endturn" or action == "restart"):
             res = 0
             if action == "play":
-                res = 1
                 card, res = self.choose_card(player, playaction)
                 backupgame = player.game.copy(keep=True)
                 if card is not None:
@@ -70,8 +69,8 @@ class WebAgent:
                         player.game.play_card(card)
                     except OperationError:
                         ggame = backupgame
+                        res = 0
             elif action == "attack":
-                res = 1
                 attacker, res = self.choose_attacker(player, playaction)
                 backupgame = player.game.copy(keep=True)
                 if attacker is not None:
@@ -79,6 +78,7 @@ class WebAgent:
                         attacker.attack()
                     except OperationError:
                         ggame = backupgame
+                        res = 0
             elif action == "power":
                 res = 1
                 backupgame = player.game.copy(keep=True)
@@ -87,6 +87,7 @@ class WebAgent:
                         player.hero.power.use()
                     except OperationError:
                         ggame = backupgame
+                        res = 0
             self.choose_action(res)
         if action == "quit" or action == "restart":
             raise ConnectionError()
