@@ -15,6 +15,7 @@ def recvAll(conn):
     data = conn.recv(1024).decode('utf8')
     while data[-1] != '\0':
         data += conn.recv(1024).decode('utf8')
+    print("Receive:" + data)
     return data[:-1]
 
 
@@ -226,6 +227,7 @@ if __name__ == '__main__':
         ggame = Game([deck1, deck2], [(agent, "webagent"), (SimpleUCTAgent(0.2, 10), "uct")])
         try:
             ggame.start()
+            agent.reconnect()
         except ConnectionResetError:
             logfile.write('Restart game due to connection reset\n')
             agent.reconnect()
