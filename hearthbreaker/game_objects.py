@@ -1109,7 +1109,7 @@ class Hero(Character):
         return super().calculate_stat(stat_class, starting_value)
 
     def copy(self, new_owner, keep=False):
-        new_hero = Hero(self.base_health, self.character_class, self.power, new_owner)
+        new_hero = Hero(copy.deepcopy(self.base_health), self.character_class, self.power, new_owner)
         if keep:
             new_hero.base_attack = self.base_attack
             new_hero.dead = self.dead

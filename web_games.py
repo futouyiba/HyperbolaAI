@@ -1,6 +1,7 @@
 import socket
 import sys
 import traceback
+import time
 
 from hearthbreaker.agents.ai.uct.UCTAgent import SimpleUCTAgent
 from hearthbreaker.cards.heroes import hero_for_class
@@ -55,8 +56,10 @@ class WebAgent:
         self.__conn, addr = self.__soc.accept()
 
     def reconnect(self):
+        print('Do reconnect')
         self.__conn.close()
         self.__soc.close()
+        time.sleep(3)
 
     def do_turn(self, player):
         global ggame
@@ -90,7 +93,7 @@ class WebAgent:
                     except OperationError:
                         ggame = backupgame
                         res = 0
-            self.choose_action(res)
+            action, playaction = self.choose_action(res)
         if action == "quit" or action == "restart":
             raise ConnectionError()
 
@@ -108,8 +111,12 @@ class WebAgent:
         if len(filtered_cards) is 0:
             return None, 0
         playname = playaction[playaction.rindex('/') + 1:]
-        if 0 <= int(playname) < len(filtered_cards):
-            return filtered_cards[int(playname)], 1
+        if 0 <= int(playname) < len(player.hand):
+            print("Play card:" + player.hand[int(playname)].name)
+            if player.hand[int(playname)].can_use(player, player.game):
+                return player.hand[int(playname)], 1
+            else:
+                return None, 0
         else:
             return None, 0
 
@@ -121,8 +128,11 @@ class WebAgent:
         if len(filtered_attackers) is 0:
             return None, 0
         playname = playaction[playaction.rindex('/') + 1:]
-        if 0 <= int(playname) < len(filtered_attackers):
-            return filtered_attackers[int(playname)], 1
+        if 0 <= int(playname) < len(player.minions):
+            if player.minions[int(playname)].can_attack():
+                return player.minions[int(playname)], 1
+            else:
+                return None, 0
         else:
             return None, 0
 
@@ -139,8 +149,11 @@ class WebAgent:
             raise OperationError()
         self.__conn.send(
             bytes('''{"result":1,"next":"choose_target","choose_from":[%s]}\0''' % serialize(targets), 'utf8'))
-        decision = recvAll(self.__conn)
-        final = decision[decision.rindex('/') + 1:]
+        # decision = recvAll(self.__conn)
+        decision = self.__conn.recv(1024).decode('utf8')
+        print(decision)
+        # final = decision[decision.rindex('/') + 1:]
+        final = decision[:-1]
         if 0 <= int(final) < len(targets):
             return targets[int(final)]
         else:
@@ -150,8 +163,11 @@ class WebAgent:
         print("choose_index")
         self.__conn.send(bytes('''{"result":1,"next":"choose_index","choose_from":[%s]}\0''' % ','.join(
             [str(x) for x in range(len(player.minions) + 1)]), 'utf8'))
-        decision = recvAll(self.__conn)
-        final = decision[decision.rindex('/') + 1:]
+        # decision = recvAll(self.__conn)
+        decision = self.__conn.recv(1024).decode('utf8')
+        print(decision)
+        # final = decision[decision.rindex('/') + 1:]
+        final = decision[:-1]
         if 0 <= int(final) <= len(player.minions):
             return int(final)
         else:

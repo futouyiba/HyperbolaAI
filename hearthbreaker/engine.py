@@ -133,10 +133,12 @@ class Game(Bindable):
         self.players[1].hand.append(coin)
 
     def start(self):
+        print('Game start')
         self.pre_game()
         self.current_player = self.players[1]
         while not self.game_ended:
             self.play_single_turn()
+        print('Game end')
 
     def play_single_turn(self):
         self._start_turn()
@@ -368,6 +370,48 @@ class Player(Bindable):
 
     def __str__(self):  # pragma: no cover
         return "Player: " + self.name
+    
+    def mycopy(self,toplayer):
+        toplayer.fatigue = self.fatigue
+        toplayer.spell_multiplier = self.spell_multiplier
+        toplayer.heal_multiplier = self.heal_multiplier
+        toplayer.heal_does_damage = self.heal_does_damage
+        toplayer.double_deathrattle = self.double_deathrattle
+        toplayer.mana_filters = self.mana_filters
+        toplayer.cards_played = self.cards_played
+        toplayer.hero = self.hero.copy(toplayer, True)
+        toplayer.graveyard = copy.copy(self.graveyard)
+        toplayer.minions = [minion.copy(toplayer, toplayer.game) for minion in self.minions]
+        toplayer.hand = [copy.copy(card) for card in self.hand]
+        for card in toplayer.hand:
+            card._attached = False
+            card.attach(card, toplayer)
+        toplayer.spell_damage = self.spell_damage
+        toplayer.mana = self.mana
+        toplayer.max_mana = self.max_mana
+        toplayer.upcoming_overload = self.upcoming_overload
+        toplayer.current_overload = self.current_overload
+        toplayer.dead_this_turn = copy.copy(self.dead_this_turn)
+        if self.weapon:
+            toplayer.weapon = self.weapon.copy(toplayer)
+        for effect in self.effects:
+            effect = copy.copy(effect)
+            toplayer.add_effect(effect)
+        toplayer.secrets = []
+        for secret in self.secrets:
+            new_secret = type(secret)()
+            new_secret.player = toplayer
+            toplayer.secrets.append(new_secret)
+        for aura in filter(lambda a: isinstance(a, AuraUntil), self.player_auras):
+            aura = copy.deepcopy(aura)
+            aura.owner = toplayer.hero
+            toplayer.add_aura(aura)
+        for aura in filter(lambda a: isinstance(a, AuraUntil), self.object_auras):
+            aura = copy.deepcopy(aura)
+            aura.owner = toplayer.hero
+            toplayer.add_aura(aura)
+        toplayer.effect_count = dict()
+        return toplayer
 
     def copy(self, new_game, keep=False):
         copied_player = Player(self.name, self.deck.copy(), self.agent, new_game)
@@ -515,6 +559,9 @@ class Player(Bindable):
             'upcoming_overload': self.upcoming_overload,
             'name': self.name,
         }
+
+    def tostr(self):
+        self.__to_json__()
 
     @classmethod
     def __from_json__(cls, pd, game, agent):

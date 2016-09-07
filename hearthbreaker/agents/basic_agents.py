@@ -88,13 +88,15 @@ class PredictableAgent(Agent):
 
 
 class RandomAgent(DoNothingAgent):
-    def __init__(self):
+    def __init__(self,print=False):
         super().__init__()
+        self.__print=print
 
     def do_card_check(self, cards):
         return [True, True, True, True]
 
     def do_turn(self, player):
+        # print("Turn passed:%s"%player.game._turns_passed)
         while True:
             attack_minions = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
             if player.hero.can_attack():
@@ -108,10 +110,17 @@ class RandomAgent(DoNothingAgent):
                 action = random.randint(0, possible_actions - 1)
                 if player.hero.power.can_use() and action == possible_actions - 1:
                     player.hero.power.use()
+                    if self.__print:
+                        print("Agent action:"+player.name+"\t"+"use power->"+player.game.other_player.name+':'+str(player.game.other_player.hero.health))
+
                 elif action < len(attack_minions):
                     attack_minions[action].attack()
+                    if self.__print:
+                        print("Agent action:"+player.name+"\t"+"attack->"+player.game.other_player.name+':'+str(player.game.other_player.hero.health))
                 else:
                     player.game.play_card(playable_cards[action - len(attack_minions)])
+                    if self.__print:
+                        print("Agent action:"+player.name+"\t"+"play card->%s "%playable_cards[action - len(attack_minions)]+player.game.other_player.name+':'+str(player.game.other_player.hero.health))
             else:
                 return
 

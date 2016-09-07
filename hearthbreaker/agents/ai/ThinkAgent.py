@@ -14,34 +14,41 @@ class ThinkAgent:
         self.__player = player
         self.__game = player.game
         self.__period = period
-        self.__testtime = 10
+        self.__testtime = 200
 
     def getGame(self):
         return self.__game
 
     def think(self):
+        print("UCT is thinking")
         allgames = []
         winrate = []
         for i in range(self.__period):
             self.__copyGameToMind()
             self.__gameinmind.current_player.agent.do_turn(self.__gameinmind.current_player)
+            print("Thinking:%s->" % i)
             allgames.append(self.__gameinmind.copy(keep=True))
             winrate.append(0)
             self.__gameinmind._end_turn()
             game4test = self.__gameinmind.copy(keep=True)
             for j in range(self.__testtime):
+                print('Retesting...')
                 while not game4test.game_ended:
                     game4test.play_single_turn()
                 if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
                     winrate[i] += 1.0
+                game4test = self.__gameinmind.copy(keep=True)
             winrate[i] = winrate[i] / self.__testtime
+        print('Win rates:' + ','.join([str(a) for a in winrate]))
         v = max(winrate)
+        print("win rate:%s->%s" % (v, winrate.index(v)))
+        print("Target game->%s:%s\t%s:%s"%(allgames[winrate.index(v)].players[0].name,allgames[winrate.index(v)].players[0].hero.health,allgames[winrate.index(v)].players[1].name,allgames[winrate.index(v)].players[1].hero.health))
         return allgames[winrate.index(v)]
 
     def __copyGameToMind(self):
         copied_game = copy.copy(self.__game)
-        copied_game.events = {}
-        copied_game._all_cards_played = []
+        copied_game.events = copy.copy(self.__game.events)
+        copied_game._all_cards_played = [copy.copy(card) for card in self.__game._all_cards_played]
         '''copied_game.players = [player.copy(copied_game) for player in self.players]
         if self.__game.current_player is self.__game.players[0]:
             copied_game.current_player = copied_game.players[0]
@@ -74,7 +81,8 @@ class ThinkAgent:
                 onedeck = player.deck
         if onedeck is None:
             raise Exception("can't find agent")
-        copied_players = [(Player(player.name, onedeck.copy(), RandomAgent(), self.__gameinmind), player) for player in
+        copied_players = [(Player(player.name, onedeck.copy(), RandomAgent(True), self.__gameinmind), player) for player
+                          in
                           self.__game.players]
         for copied_player, original_player in copied_players:
             copied_player.hero = original_player.hero.copy(copied_player)

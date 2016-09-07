@@ -2,6 +2,7 @@ import json
 import timeit
 
 from hearthbreaker.agents.ai.uct.UCTAgent import SimpleUCTAgent
+from hearthbreaker.agents.trade_agent import TradeAgent
 from hearthbreaker.agents.basic_agents import RandomAgent
 from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
@@ -30,7 +31,7 @@ def load_deck(filename):
     return Deck(cards, hero_for_class(character_class))
 
 
-_totalPlay = 10
+_totalPlay = 1
 _totalCount = 0.0
 
 
@@ -60,7 +61,7 @@ def do_stuff():
     deck1 = load_deck("zoo.hsdeck")
     deck2 = load_deck("zoo.hsdeck")
     '''Give agent object and play name'''
-    game = Game([deck1, deck2], [(RandomAgent(), "opponent"), (SimpleUCTAgent(0.2, 10), "uct")])
+    game = Game([deck1, deck2], [(TradeAgent(), "opponent"), (SimpleUCTAgent(0.2, 10), "uct")])
     # game = Game([deck1, deck2], [(UCTAgent.SimpleUCTAgent(0.1,100),"opponent"), (UCTAgent.SimpleUCTAgent(0.2,100),
     #                                                                              "uct")])
 
