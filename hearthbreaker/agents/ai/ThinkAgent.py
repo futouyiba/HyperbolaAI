@@ -21,6 +21,28 @@ def evaluating(inputgame):
     else:
         return 0.0
 
+def branching(input):
+    game=input[0]
+    i=input[1]
+    testtime=input[2]
+    game.current_player.agent.setoutput(True)
+    game.current_player.agent.do_turn(game.current_player)
+    print("Thinking:%s" % i)
+    returngame=game.copy(keep=True)
+    winrate=0
+    game._end_turn()
+    action=game.current_player.agent.datatowrite
+    game.current_player.agent.datatowrite = []
+    game.current_player.agent.setoutput(False)
+    game.other_player.agent.setoutput(False)
+    # pool=Pool(testtime)
+    # winrate = sum(pool.map(evaluating, [game for i in range(testtime)]))
+    winrate+=evaluating(game)
+    # pool.close()
+    # pool.join()
+    winrate = winrate / testtime
+    return returngame,action,winrate
+
 
 class ThinkAgent:
     def __init__(self, player, period):
@@ -28,7 +50,7 @@ class ThinkAgent:
         self.__game = player.game
         self.__period = period
         # self.__testtime = 100
-        self.__testtime = 10
+        self.__testtime = 100
 
     def getGame(self):
         return self.__game
@@ -39,22 +61,32 @@ class ThinkAgent:
         allgames = []
         winrate = []
         action = []
+        self.__gameinmind=[]
         for i in range(self.__period):
-            self.__copyGameToMind()
-            self.__gameinmind.current_player.agent.setoutput(True)
-            self.__gameinmind.current_player.agent.do_turn(self.__gameinmind.current_player)
-            print("Thinking:%s" % i)
-            allgames.append(self.__gameinmind.copy(keep=True))
-            winrate.append(0)
-            self.__gameinmind._end_turn()
-            action.append(self.__gameinmind.current_player.agent.datatowrite)
-            self.__gameinmind.current_player.agent.datatowrite = []
-            self.__gameinmind.current_player.agent.setoutput(False)
-            self.__gameinmind.other_player.agent.setoutput(False)
-            pool=Pool(2)
-            winrate[i] = sum(pool.map(evaluating, [self.__gameinmind for i in range(self.__testtime)]))
-            pool.close()
-            pool.join()
+            self.__gameinmind.append((self.__copyGameToMind(),i,self.__testtime))
+        p=Pool(self.__period)
+        res=p.map(branching,self.__gameinmind)
+        p.close()
+        p.join()
+        for game,act,win in res:
+            allgames.append(game)
+            action.append(act)
+            winrate.append(win)
+
+            # self.__gameinmind.current_player.agent.setoutput(True)
+            # self.__gameinmind.current_player.agent.do_turn(self.__gameinmind.current_player)
+            # print("Thinking:%s" % i)
+            # allgames.append(self.__gameinmind.copy(keep=True))
+            # winrate.append(0)
+            # self.__gameinmind._end_turn()
+            # action.append(self.__gameinmind.current_player.agent.datatowrite)
+            # self.__gameinmind.current_player.agent.datatowrite = []
+            # self.__gameinmind.current_player.agent.setoutput(False)
+            # self.__gameinmind.other_player.agent.setoutput(False)
+            # pool=Pool(self.__testtime)
+            # winrate[i] = sum(pool.map(evaluating, [self.__gameinmind for i in range(self.__testtime)]))
+            # pool.close()
+            # pool.join()
             # game4test = self.__gameinmind.copy(keep=True)
             # for j in range(self.__testtime):
             #     winrate[i]+=self.evaluating(self.__gameinmind)
@@ -64,7 +96,7 @@ class ThinkAgent:
             # if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
             #     winrate[i] += 1.0
             # game4test = self.__gameinmind.copy(keep=True)
-            winrate[i] = winrate[i] / self.__testtime
+            # winrate[i] = winrate[i] / self.__testtime
         print('Win rates:' + ','.join([str(a) for a in winrate]))
         v = max(winrate)
         if len(action[winrate.index(v)]) > 0:
@@ -101,23 +133,24 @@ class ThinkAgent:
         for secret in copied_game.other_player.secrets:
             secret.activate(copied_game.other_player)
         '''
-        self.__gameinmind = copied_game
-        self.__copyPlayerToMind()
+        # self.__gameinmind = copied_game
+        self.__copyPlayerToMind(copied_game)
+        return copied_game
 
-    def __copyPlayerToMind(self):
+    def __copyPlayerToMind(self,coppied_game):
         onedeck = None
-        for player in self.__gameinmind.players:
+        for player in coppied_game.players:
             if player.name == self.__player.name:
                 onedeck = player.deck
         if onedeck is None:
             raise Exception("can't find agent")
         copied_players = [
-            (Player(player.name, onedeck.copy(), InnerRandomAgent(player, player.name), self.__gameinmind), player)
+            (Player(player.name, onedeck.copy(), InnerRandomAgent(player, player.name), coppied_game), player)
             for player in self.__game.players]
         for copied_player, original_player in copied_players:
             copied_player.hero = original_player.hero.copy(copied_player)
             copied_player.graveyard = copy.copy(original_player.graveyard)
-            copied_player.minions = [minion.copy(copied_player, self.__gameinmind) for minion in
+            copied_player.minions = [minion.copy(copied_player, coppied_game) for minion in
                                      original_player.minions]
             copied_player.hand = [copy.copy(card) for card in original_player.hand]
             for card in copied_player.hand:
@@ -149,24 +182,24 @@ class ThinkAgent:
                 copied_player.add_aura(aura)
             copied_player.effect_count = dict()
 
-        self.__gameinmind.players = [player for player, oplayer in copied_players]
+        coppied_game.players = [player for player, oplayer in copied_players]
         if self.__game.current_player is self.__game.players[0]:
-            self.__gameinmind.current_player = self.__gameinmind.players[0]
-            self.__gameinmind.other_player = self.__gameinmind.players[1]
+            coppied_game.current_player = coppied_game.players[0]
+            coppied_game.other_player = coppied_game.players[1]
         else:
-            self.__gameinmind.current_player = self.__gameinmind.players[1]
-            self.__gameinmind.other_player = self.__gameinmind.players[0]
+            coppied_game.current_player = coppied_game.players[1]
+            coppied_game.other_player = coppied_game.players[0]
 
-        self.__gameinmind.current_player.opponent = self.__gameinmind.other_player
-        self.__gameinmind.other_player.opponent = self.__gameinmind.current_player
-        self.__gameinmind._has_turn_ended = self.__game._has_turn_ended
+        coppied_game.current_player.opponent = coppied_game.other_player
+        coppied_game.other_player.opponent = coppied_game.current_player
+        coppied_game._has_turn_ended = self.__game._has_turn_ended
 
-        for player in self.__gameinmind.players:
+        for player in coppied_game.players:
             player.hero.attach(player.hero, player)
             if player.weapon:
                 player.weapon.attach(player.hero, player)
             for minion in player.minions:
                 minion.attach(minion, player)
 
-        for secret in self.__gameinmind.other_player.secrets:
-            secret.activate(self.__gameinmind.other_player)
+        for secret in coppied_game.other_player.secrets:
+            secret.activate(coppied_game.other_player)

@@ -61,7 +61,7 @@ def do_stuff():
     deck1 = load_deck("zoo.hsdeck")
     deck2 = load_deck("zoo.hsdeck")
     '''Give agent object and play name'''
-    game = Game([deck1, deck2], [(TradeAgent(), "opponent"), (SimpleUCTAgent(0.2, 10), "uct")])
+    game = Game([deck1, deck2], [(TradeAgent(), "opponent"), (SimpleUCTAgent(0.002, 200), "uct")])
     # game = Game([deck1, deck2], [(UCTAgent.SimpleUCTAgent(0.1,100),"opponent"), (UCTAgent.SimpleUCTAgent(0.2,100),
     #                                                                              "uct")])
 

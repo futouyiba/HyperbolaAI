@@ -6,7 +6,7 @@ from hearthbreaker.agents.basic_agents import RandomAgent
 
 
 class SimpleUCTAgent(RandomAgent):
-    def __init__(self, finishrate=0.0001, period=400):
+    def __init__(self, finishrate=0.0001, period=200):
         RandomAgent.__init__(self)
         self.__finishrate = finishrate
         self.__period = period
