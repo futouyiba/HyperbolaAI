@@ -3,12 +3,23 @@ import copy
 from hearthbreaker.agents.basic_agents import InnerRandomAgent
 from hearthbreaker.engine import Player
 from hearthbreaker.tags.base import AuraUntil
+from multiprocessing import Pool
 
 '''
 This agent copy current game to mind and play with himself
 '''
 
 trainlog = open('train.dat', 'a')
+
+
+def evaluating(inputgame):
+    game4test = inputgame.copy(keep=True)
+    while not game4test.game_ended:
+        game4test.play_single_turn()
+    if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
+        return 1.0
+    else:
+        return 0.0
 
 
 class ThinkAgent:
@@ -21,13 +32,6 @@ class ThinkAgent:
 
     def getGame(self):
         return self.__game
-
-    def evaluating(self, winrate, i):
-        game4test = self.__gameinmind.copy(keep=True)
-        while not game4test.game_ended:
-            game4test.play_single_turn()
-        if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
-            winrate[i] += 1.0
 
     def think(self):
         global trainlog
@@ -47,19 +51,24 @@ class ThinkAgent:
             self.__gameinmind.current_player.agent.datatowrite = []
             self.__gameinmind.current_player.agent.setoutput(False)
             self.__gameinmind.other_player.agent.setoutput(False)
-            game4test = self.__gameinmind.copy(keep=True)
-            for j in range(self.__testtime):
-                # self.evaluating(winrate, j)
-                # print('Retesting...')
-                while not game4test.game_ended:
-                    game4test.play_single_turn()
-                if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
-                    winrate[i] += 1.0
-                game4test = self.__gameinmind.copy(keep=True)
+            pool=Pool(10)
+            winrate[i] = sum(pool.map(evaluating, [self.__gameinmind for i in range(self.__testtime)]))
+            pool.close()
+            pool.join()
+            # game4test = self.__gameinmind.copy(keep=True)
+            # for j in range(self.__testtime):
+            #     winrate[i]+=self.evaluating(self.__gameinmind)
+            # print('Retesting...')
+            # while not game4test.game_ended:
+            #     game4test.play_single_turn()
+            # if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
+            #     winrate[i] += 1.0
+            # game4test = self.__gameinmind.copy(keep=True)
             winrate[i] = winrate[i] / self.__testtime
         print('Win rates:' + ','.join([str(a) for a in winrate]))
         v = max(winrate)
-        trainlog.write('\t'.join(action[winrate.index(v)]) + '\n')
+        if len(action[winrate.index(v)]) > 0:
+            trainlog.write('\t'.join(action[winrate.index(v)]) + '\n')
         # print("win rate:%s->%s" % (v, winrate.index(v)))
         # print("Target game->%s:%s\t%s:%s" % (allgames[winrate.index(v)].players[0].name, allgames[winrate.index(v)].players[0].hero.health,
         # allgames[winrate.index(v)].players[1].name, allgames[winrate.index(v)].players[1].hero.health))
