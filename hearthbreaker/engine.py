@@ -71,6 +71,8 @@ class Game(Bindable):
         self._all_cards_played = []
         self._turns_passed = 0
         self.selected_card = None
+        self.attackername=None
+        self.attackerhealth=None
 
     def random_draw(self, cards, requirement):
         filtered_cards = [card for card in filter(requirement, cards)]

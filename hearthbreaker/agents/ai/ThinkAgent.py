@@ -1,6 +1,6 @@
 import copy
 
-from hearthbreaker.agents.basic_agents import RandomAgent
+from hearthbreaker.agents.basic_agents import InnerRandomAgent
 from hearthbreaker.engine import Player
 from hearthbreaker.tags.base import AuraUntil
 
@@ -8,31 +8,49 @@ from hearthbreaker.tags.base import AuraUntil
 This agent copy current game to mind and play with himself
 '''
 
+trainlog = open('train.dat', 'a')
+
 
 class ThinkAgent:
     def __init__(self, player, period):
         self.__player = player
         self.__game = player.game
         self.__period = period
-        self.__testtime = 200
+        # self.__testtime = 100
+        self.__testtime = 10
 
     def getGame(self):
         return self.__game
 
+    def evaluating(self, winrate, i):
+        game4test = self.__gameinmind.copy(keep=True)
+        while not game4test.game_ended:
+            game4test.play_single_turn()
+        if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
+            winrate[i] += 1.0
+
     def think(self):
-        print("UCT is thinking")
+        global trainlog
+        # print("UCT is thinking")
         allgames = []
         winrate = []
+        action = []
         for i in range(self.__period):
             self.__copyGameToMind()
+            self.__gameinmind.current_player.agent.setoutput(True)
             self.__gameinmind.current_player.agent.do_turn(self.__gameinmind.current_player)
-            print("Thinking:%s->" % i)
+            print("Thinking:%s" % i)
             allgames.append(self.__gameinmind.copy(keep=True))
             winrate.append(0)
             self.__gameinmind._end_turn()
+            action.append(self.__gameinmind.current_player.agent.datatowrite)
+            self.__gameinmind.current_player.agent.datatowrite = []
+            self.__gameinmind.current_player.agent.setoutput(False)
+            self.__gameinmind.other_player.agent.setoutput(False)
             game4test = self.__gameinmind.copy(keep=True)
             for j in range(self.__testtime):
-                print('Retesting...')
+                # self.evaluating(winrate, j)
+                # print('Retesting...')
                 while not game4test.game_ended:
                     game4test.play_single_turn()
                 if game4test.playersInOrder[0].hero.dead and game4test._turns_passed < 50:
@@ -41,8 +59,10 @@ class ThinkAgent:
             winrate[i] = winrate[i] / self.__testtime
         print('Win rates:' + ','.join([str(a) for a in winrate]))
         v = max(winrate)
-        print("win rate:%s->%s" % (v, winrate.index(v)))
-        print("Target game->%s:%s\t%s:%s"%(allgames[winrate.index(v)].players[0].name,allgames[winrate.index(v)].players[0].hero.health,allgames[winrate.index(v)].players[1].name,allgames[winrate.index(v)].players[1].hero.health))
+        trainlog.write('\t'.join(action[winrate.index(v)]) + '\n')
+        # print("win rate:%s->%s" % (v, winrate.index(v)))
+        # print("Target game->%s:%s\t%s:%s" % (allgames[winrate.index(v)].players[0].name, allgames[winrate.index(v)].players[0].hero.health,
+        # allgames[winrate.index(v)].players[1].name, allgames[winrate.index(v)].players[1].hero.health))
         return allgames[winrate.index(v)]
 
     def __copyGameToMind(self):
@@ -81,9 +101,9 @@ class ThinkAgent:
                 onedeck = player.deck
         if onedeck is None:
             raise Exception("can't find agent")
-        copied_players = [(Player(player.name, onedeck.copy(), RandomAgent(True), self.__gameinmind), player) for player
-                          in
-                          self.__game.players]
+        copied_players = [
+            (Player(player.name, onedeck.copy(), InnerRandomAgent(player, player.name), self.__gameinmind), player)
+            for player in self.__game.players]
         for copied_player, original_player in copied_players:
             copied_player.hero = original_player.hero.copy(copied_player)
             copied_player.graveyard = copy.copy(original_player.graveyard)

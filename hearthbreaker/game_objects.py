@@ -954,6 +954,8 @@ class Minion(Character):
         self.replaced_by = new_minion
 
     def attack(self):
+        self.game.attackername=self.card.name
+        self.game.attackerhealth=self.health
         super().attack()
 
     def damage(self, amount, attacker):

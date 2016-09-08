@@ -21,10 +21,10 @@ class SimpleUCTAgent(RandomAgent):
         self.__thinkagent = ThinkAgent(player, self.__period)
         nextgame = self.__thinkagent.think()
         '''Recover human player's information'''
-        print('Player:' + nextgame.players[nextgame.play_order[0]].name + '\t' + str(
-            nextgame.players[nextgame.play_order[0]].hero.health))
-        print('Player:' + nextgame.players[nextgame.play_order[1]].name + '\t' + str(
-            nextgame.players[nextgame.play_order[1]].hero.health))
+        # print('Player:' + nextgame.players[nextgame.play_order[0]].name + '\t' + str(
+        #     nextgame.players[nextgame.play_order[0]].hero.health))
+        # print('Player:' + nextgame.players[nextgame.play_order[1]].name + '\t' + str(
+        #     nextgame.players[nextgame.play_order[1]].hero.health))
         # nextgame.players[nextgame.play_order[0]] = self.__thinkagent.getGame().players[nextgame.play_order[0]]
         nextgame.players[nextgame.play_order[0]].mycopy(self.__thinkagent.getGame().players[nextgame.play_order[0]])
         nextgame.players[nextgame.play_order[1]].mycopy(self.__thinkagent.getGame().players[nextgame.play_order[1]])
