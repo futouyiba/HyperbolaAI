@@ -51,7 +51,7 @@ class ThinkAgent:
             self.__gameinmind.current_player.agent.datatowrite = []
             self.__gameinmind.current_player.agent.setoutput(False)
             self.__gameinmind.other_player.agent.setoutput(False)
-            pool=Pool(10)
+            pool=Pool(2)
             winrate[i] = sum(pool.map(evaluating, [self.__gameinmind for i in range(self.__testtime)]))
             pool.close()
             pool.join()
@@ -69,6 +69,7 @@ class ThinkAgent:
         v = max(winrate)
         if len(action[winrate.index(v)]) > 0:
             trainlog.write('\t'.join(action[winrate.index(v)]) + '\n')
+            trainlog.flush()
         # print("win rate:%s->%s" % (v, winrate.index(v)))
         # print("Target game->%s:%s\t%s:%s" % (allgames[winrate.index(v)].players[0].name, allgames[winrate.index(v)].players[0].hero.health,
         # allgames[winrate.index(v)].players[1].name, allgames[winrate.index(v)].players[1].hero.health))
